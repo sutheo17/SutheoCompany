@@ -1,0 +1,29 @@
+{
+  "name": "sutheocompany",
+  "version": "1.0.0",
+  "description": "Application for a furniture company.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sutheo17/SutheoCompany.git"
+  },
+  "author": "Istvan Sutheo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sutheo17/SutheoCompany/issues"
+  },
+  "homepage": "https://github.com/sutheo17/SutheoCompany#readme",
+  "dependencies": {
+    "bootstrap": "^5.3.3",
+    "colors": "^1.4.0",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "mongoose": "^8.13.0"
+  },
+  "devDependencies": {
+    "mocha": "^11.1.0"
+  }
+}
