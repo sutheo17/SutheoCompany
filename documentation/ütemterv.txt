@@ -1,0 +1,26 @@
+=================================================================================
+      Hallgató neve: Sütheö István
+       Neptun kódja: XOBJYX
+         Szakiránya: BME VIK MSC - Adattudomány és mesterséges intelligencia fõspecializáció
+         Email címe: istvan.sutheo@gmail.com
+ Konzulens(ek) neve: Paróczi Zsombor
+        Tanév/félév: 2024/2025. 2. félév
+  Feladat/téma címe: Node.js alapú portálfejlesztés express alapon
+=================================================================================
+Tervezett munkafázisok a félév során:
+=================================================================================
+  1-2. oktatási hét: Téma és konzulens kiválasztása
+  3-4. oktatási hét: Specifikáció, valamint az egyes oldalakhoz drótváz elkészítése.
+  5. oktatási hét: Express alkalmazás, statikus oldalak létrehozása.
+  6. oktatási hét: Middleware és routing struktúra létrehozása.
+  7. oktatási hét: EJS használatának bevezetése, raktár felület kidolgozása.
+  8. oktatási hét: Email küldõ (nodemailer) bevezetése, árkalkulátor oldal kidolgozása.
+  9. oktatási hét: Ütemterv felület, múltbéli munkák oldal elkészítése.
+ 10. oktatási hét: Felhasználói autentikáció, autorizáció bevezetése.
+ 11. oktatási hét: Tesztelés, hibakeresés, finomhangolás.
+12-13. oktatási hét: Írásbeli beadandó és prezentáció elkészítése, konzulensnek
+                     bemutatás és írásbeli jóváhagyása
+   14. oktatási hét: Írásbeli leadása, szóbeli elõadás megtartása, félév munkája
+                     során keletkezett tapasztalatok összegyûjtése, értékelése
+                     és dokumentálása
+=================================================================================

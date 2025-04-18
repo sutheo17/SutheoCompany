@@ -1,0 +1,243 @@
+Bútoros raktárkezelő alkalmazás
+
+[AUTH]
+
+-login.html - Bejelentkezési felület
+
+[INDEX]
+
+-index.html - Fő oldal, a raktárkészlet listája
+
+[INVENTORY]
+
+-product.html - Egy adott termék részletei és tranzakciók
+
+-addproduct.html - Új termék hozzáadása
+
+-modifyproduct.html - Meglévő termék módosítása
+
+[TRANSCATIONS]
+
+-transaction.html - Egy adott termékhez tartozó tranzakciók megtekintése
+
+-addtransaction.html - Új tranzakció rögzítése egy adott termékhez
+
+-modifytransaction.html - Meglévő tranzakció módosítása
+
+[QUOTE]
+
+-quote.html - Árajánlat kalkulátor
+
+[PRICING]
+
+-pricing.html - Az egyes tételek árának megtekintése / módosítása
+
+-modifypricing.html - Az egyes tételek árának módosításas
+
+[PLANNER]
+
+-project.html - Múltbéli és jövőbeli munkák listázása
+
+-addproject.html - Új projekt hozzáadása
+
+-modifyproject.html - Meglévő projekt módosítása
+
+[CUSTOMER]
+
+-customer.html - Megrendelők listája
+
+-addcustomer.html - Új megrendelő hozzáadása
+
+-modifycustomer.html - Meglévő megrendelő módosítása
+
+[TRENDS]
+
+-trends.html - Trendek és statisztikák (automatikusan változik, a múltbéli munkák függvényében)
+
+
+
+
+Routing
+
+
+
+
+[LIST OF MIDDLEWARES]
+
+middleware/common/
+	renderMW.js 
+
+middleware/auth/
+	checkAuthMW.js (Felhasználó ellenőrzése, ha nincs bejelentkezve -> login oldalra irányítás)
+	loginMW.js (Bejelentkezés kezelése)
+	logoutMW.js (Kijelentkezés kezelése)
+
+middleware/inventory/
+	getListOfProductsMW.js
+	getProductMW.js
+	saveProductMW.js
+	delProductMW.js
+
+middleware/transaction/
+	getListOfTransactionsMW.js
+	getTransactionMW.js
+	saveTransactionMW.js
+	delTransactionMW.js
+
+middleware/customer/
+	getListOfCustomersMW.js
+	getCustomerMW.js
+	saveCustomerMW.js
+	delCustomerMW.js
+
+middleware/quote/
+	calculateQuoteMW.js
+
+middleware/project/
+	getListOfProjectsMW.js
+	getProjectMW.js
+	saveProjectMW.js
+	delProjectMW.js
+
+middleware/analytics/
+	generateAnalyticsMW.js
+
+[AUTH]
+
+GET, POST /login (login.html)
+	loginMW
+	renderMW(login.html)
+
+GET /logout (Kijelentkezés)
+		logoutMW
+
+[INVENTORY]
+
+GET, POST /  (index.html)
+	checkAuthMW	
+	getListOfProductsMW
+	getProductMW
+	saveProductMW
+	renderMW(index.html)
+
+GET /inventory/:productid (product.html)
+	checkAuthMW
+	getProductMW
+	renderMW(product.html)
+
+GET,POST /inventory/add  (addproduct.html)
+	checkAuthMW
+	saveProductMW
+	renderMW(addproduct.html)	
+		Ha volt érték → formba ez legyen
+		Ha nem volt → legyen üres
+
+GET, POST /inventory/modify/:productid (modifyproduct.html)
+	checkAuthMW
+	getProductMW
+	saveProductMW
+	renderMW(modifyproduct.html)
+
+GET /inventory/delete/:productid (Termék törlése)
+	checkAuthMW
+	getProductMW
+	delProductMW
+
+[TRANSACTIONS]
+
+GET /transaction/:productid (transaction.html)
+	checkAuthMW
+	getProductMW
+	getListOfTransactionsMW
+	renderMW(transaction.html)
+
+GET, POST /transaction/add/:productid (addtransaction.html)
+	checkAuthMW	
+	saveTransactionMW
+	renderMW(addtransaction.html)
+
+GET, POST /transaction/modify/:productid/:transactionid (modifytransaction.html)
+	checkAuthMW
+	getProductMW
+	getTransactionMW
+	saveTransactionMW
+	renderMW(modifytransaction.html)
+
+GET /transaction/delete/:productid/:transactionid (Tranzakció törlése)
+	checkAuthMW
+	getTransactionMW
+	delTransactionMW
+
+[CUSTOMER]
+
+GET /customer/:customerid (customer.html)
+	checkAuthMW
+	getListsOfCustomerMW
+	renderMW(customer.html)
+
+GET, POST /customer/add/:customerid (addcustomer.html)
+	checkAuthMW	
+	saveCustomerMW
+	renderMW(addcustomer.html)
+
+GET, POST /customer/modify/:customerid (modifycustomer.html)
+	checkAuthMW
+	getCustomerMW
+	saveCustomerMW
+	renderMW(modifycustomer.html)
+
+GET /customer/delete/:customerid (Megrendelős törlése)
+	checkAuthMW
+	getCustomerMW
+	delCustomerMW
+
+[QUOTE]
+
+GET, POST /quote (quote.html)
+	checkAuthMW
+	getListOfProductsMW
+	calculateQuoteMW
+	renderMW(quote.html)
+
+[PRICING]
+
+GET /pricing (pricing.html)
+	checkAuthMW
+	getListOfProductsMW
+	renderMW(pricing.html)
+
+GET, POST /pricing/modify/:productid (modifypricing.html)
+	checkAuthMW
+	getProductMW	
+	saveProductMW
+	renderMW(modifypricing.html)
+
+[PROJECTS]
+
+GET /project (project.html)
+	checkAuthMW
+	getListOfProjectsMW
+	renderMW(projects.html)
+
+GET, POST /project/add (addproject.html)
+	checkAuthMW
+	saveProjectMW
+	renderMW(addproject.html)
+
+GET, POST /project/modify/:projectid (modifyproject.html)
+	checkAuthMW
+	getProjectMW
+	saveProjectMW
+	renderMW(modifyproject.html)
+
+GET /project/delete/:projectid (Projekt törlése)
+	checkAuthMW
+	getProjectMW
+	delProjectMW
+
+[TRENDS]
+
+GET /trends (trends.html)
+	checkAuthMW
+	generateAnalyticsMW
+	renderMW(trends.html)
