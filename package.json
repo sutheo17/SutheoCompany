@@ -19,9 +19,11 @@
   "dependencies": {
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
+    "chart.js": "^4.4.9",
     "colors": "^1.4.0",
     "ejs": "^3.1.10",
     "express": "^4.21.2",
+    "fullcalendar": "^6.1.17",
     "mongoose": "^8.13.0"
   },
   "devDependencies": {
