@@ -65,7 +65,7 @@ Routing
 [LIST OF MIDDLEWARES]
 
 middleware/common/
-	renderMW.js 
+	render.js
 
 middleware/auth/
 	checkAuthMW.js (Felhasználó ellenőrzése, ha nincs bejelentkezve -> login oldalra irányítás)

@@ -1,0 +1,42 @@
+<%- include('header', {pagetitle: 'Trends'}) -%>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<div style="width: 600px; margin: 50px auto;">
+  <canvas id="projectsPieChart"></canvas>
+</div>
+
+<script>
+  const ctx = document.getElementById('projectsPieChart').getContext('2d');
+  const projectsPieChart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: ['New York', 'Los Angeles', 'Chicago', 'Houston', 'Phoenix'],
+      datasets: [{
+        label: 'Projects by City',
+        data: [
+          Math.floor(Math.random() * 100) + 1,
+          Math.floor(Math.random() * 100) + 1,
+          Math.floor(Math.random() * 100) + 1,
+          Math.floor(Math.random() * 100) + 1,
+          Math.floor(Math.random() * 100) + 1
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Projects by City',
+          font: {
+            size: 24
+          }
+        },
+        legend: {
+          position: 'bottom'
+        }
+      }
+    }
+  });
+</script>
+<%- include('footer') -%>

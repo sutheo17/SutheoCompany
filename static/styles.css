@@ -1,0 +1,44 @@
+/*
+    Product
+*/
+.table-custom-product td {
+    border: none;
+}
+.table-custom-product  .col-3 {
+    width: 25%;
+}
+.table-custom-product  .col-6 {
+    width: 50%;
+}
+.table-custom-product  .col-3 img {
+    width: 100%;
+}
+
+/*
+    ProductModify
+*/
+
+.table-custom-product-modify tr,
+.table-custom-product-modify td,
+.table-custom-product-modify th {
+    border: none !important;
+}
+
+/*
+    Project
+*/
+
+#calendar {
+    max-width: 900px;
+    margin: 50px auto;
+}
+.add-button-project {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+.add-button-project button {
+    padding: 10px 30px;
+    font-weight: bold;
+    font-size: 18px;
+}

@@ -1,0 +1,37 @@
+<%- include('header', {pagetitle: 'Project'}) -%>
+<div id="calendar"></div>
+
+<div class="add-button-project">
+  <button class="btn btn-success" onclick="window.location.href='projectmodify.ejs'">Add new</button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const calendarEl = document.getElementById('calendar');
+
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: 'dayGridMonth',
+      initialDate: '2025-03-01',
+      headerToolbar: {
+        left: 'prev',
+        center: 'title',
+        right: 'next'
+      },
+      events: [
+        { title: 'Project 1', start: '2025-03-03', end: '2025-03-07' },
+        { title: 'Project 2', start: '2025-03-13', end: '2025-03-15' },
+        { title: 'Project 3', start: '2025-03-17', end: '2025-03-18' },
+        { title: 'Project 4', start: '2025-03-19', end: '2025-03-21' },
+        { title: 'Project 5', start: '2025-03-30', end: '2025-03-31' }
+      ],
+      eventClick: function(info) {
+        window.location.href = '/project/modify';
+      }
+    });
+
+    calendar.render();
+  });
+</script>
+<%- include('footer') -%>

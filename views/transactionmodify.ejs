@@ -1,0 +1,32 @@
+<%- include('header', {pagetitle: 'TransactionModify'}) -%>
+<div class="container mt-3" style="max-width: 400px;">
+  <form action="index.ejs">
+    <div class="mb-3">
+      <label for="userSelect" class="form-label fw-bold">User:</label>
+      <select class="form-select" id="userSelect">
+        <option selected>users</option>
+        <option>User 1</option>
+        <option>User 2</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label for="dateInput" class="form-label fw-bold">Date:</label>
+      <input type="date" class="form-control" id="dateInput">
+    </div>
+
+    <div class="mb-3">
+      <label for="itemsInput" class="form-label fw-bold">Number of items taken out:</label>
+      <input type="number" class="form-control" id="itemsInput" placeholder="int">
+    </div>
+
+    <div class="d-flex justify-content-between mt-4">
+      <button type="submit" class="btn btn-success">Save</button>
+      <a href="index.ejs">
+        <button type="button" class="btn btn-danger">Cancel</button>
+      </a>
+
+    </div>
+  </form>
+</div>
+<%- include('footer') -%>
