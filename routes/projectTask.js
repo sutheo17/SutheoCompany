@@ -1,5 +1,5 @@
 const renderMW =  require('../middleware/common/render.js')
-const checkAuthMW = require("../middleware/common/checkAuth");
+const checkAuthMW = require("../middleware/auth/checkAuth");
 
 module.exports = function (app) {
     const objectRepository = {};

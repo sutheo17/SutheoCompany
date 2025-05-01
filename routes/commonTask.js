@@ -1,6 +1,7 @@
 const renderMW =  require('../middleware/common/render.js')
-const loginMW = require('../middleware/common/login');
-const checkAuthMW = require('../middleware/common/checkAuth');
+const loginMW = require('../middleware/auth/login');
+const logoutMW = require('../middleware/auth/logout');
+const checkAuthMW = require('../middleware/auth/checkAuth');
 
 const UserModel = require('../models/user');
 
@@ -20,12 +21,9 @@ module.exports = function (app) {
         (req, res) => res.redirect('/')
     );
 
-    app.post('/logout', (req, res) => {
-        req.session.destroy(err => {
-            if (err) return next(err);
-            res.redirect('/login');
-        });
-    });
+    app.post('/logout',
+        logoutMW(objectRepository)
+    );
 
     app.get('/trends',
         checkAuthMW(false),

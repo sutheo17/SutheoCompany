@@ -25,7 +25,7 @@ module.exports = function (objectRepository) {
                 });
 
         } else {
-            return next();
+            return res.redirect('/');
         }
     };
 };

@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/sutheo17/SutheoCompany#readme",
   "dependencies": {
+    "body-parser": "^2.2.0",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
     "chart.js": "^4.4.9",
@@ -25,7 +26,8 @@
     "express": "^4.21.2",
     "express-session": "^1.18.1",
     "fullcalendar": "^6.1.17",
-    "mongoose": "^8.14.1"
+    "mongoose": "^8.14.1",
+    "multer": "^1.4.5-lts.2"
   },
   "devDependencies": {
     "mocha": "^11.1.0"

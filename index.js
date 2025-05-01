@@ -4,7 +4,9 @@ const app = express();
 
 app.set('view engine', 'ejs');
 
-app.use(express.urlencoded({ extended: true }));
+const bodyParser = require("body-parser")
+
+app.use(bodyParser.urlencoded(extended:false))
 
 app.use(session({
     secret: '1nD*Fs9v@L0X#fA!', //TODO: REPLACE THIS
