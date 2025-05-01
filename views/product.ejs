@@ -1,27 +1,15 @@
 <%- include('header', {pagetitle: 'Product'}) -%>
-  <style>
-
-  </style>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <div class="container-fluid">
-    <a href="/static"><img src="/logo.png" alt="Logo" width="40" height="40" style="border: 1px solid whitesmoke;"></a>
-    <a class="navbar-brand ps-3" href="/views/project.htmlt.html">Planner</a>
-    <a class="navbar-brand" href="/views/trends.htmls.html">Trends</a>
-    <a class="navbar-brand" href="/views/quote.htmle.html">Quote</a>
-    <a class="navbar-brand" href="/views/pricing.htmlg.html">Pricing</a>
-    <a class="navbar-brand" href="/views/customer.ejs">Customers</a>
-    <div class="ms-auto text-white">Logged in as: <strong>NAME</strong></div>
-  </div>
-</nav>
 <div class="container mt-4">
   <div class="row">
     <div class="col-md-12 d-flex justify-content-between">
-      <a href="/views/index.ejs" class="btn btn-link">
+      <a href="/" class="btn btn-link">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="black" class="bi bi-arrow-left" viewBox="0 0 16 16">
           <path fill-rule="evenodd" d="M15 8a.5.5 0 0 1-.5.5H3.707l4.147 4.146a.5.5 0 0 1-.708.708l-5-5a.5.5 0 0 1 0-.708l5-5a.5.5 0 0 1 .708.708L3.707 7.5H14.5A.5.5 0 0 1 15 8z"/>
         </svg>
       </a>
-      <a href="/views/productmodify.htmly.html" class="btn btn-dark">Modify</a>
+      <% if (user.leader === true) { %>
+      <a href="/product/modify" class="btn btn-dark">Modify</a>
+      <% } %>
     </div>
   </div>
 
@@ -50,7 +38,7 @@
           </tr>
           <tr>
             <td class="col-6" colspan="2">
-              <a href="/views/transaction.htmln.html" class="btn btn-success">View transactions</a>
+              <a href="/transaction/product" class="btn btn-success">View transactions</a>
             </td>
           </tr>
         </table>

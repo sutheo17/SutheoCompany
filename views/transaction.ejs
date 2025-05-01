@@ -1,7 +1,7 @@
 <%- include('header', {pagetitle: 'Transaction'}) -%>
 <div class="container mt-4">
 <!-- Back Arrow -->
-  <a href="/views/index.ejs" class="btn btn-link mb-3">
+  <a href="/product" class="btn btn-link mb-3">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="black" class="bi bi-arrow-left" viewBox="0 0 16 16">
       <path fill-rule="evenodd" d="M15 8a.5.5 0 0 1-.5.5H3.707l4.147 4.146a.5.5 0 0 1-.708.708l-5-5a.5.5 0 0 1 0-.708l5-5a.5.5 0 0 1 .708.708L3.707 7.5H14.5A.5.5 0 0 1 15 8z"/>
     </svg>
@@ -25,7 +25,8 @@
     </div>
 
     <!-- Gear Icon -->
-    <a href="transactionmodify.ejs" class="ms-2 d-flex align-items-center">
+    <% if (user.leader === true) { %>
+    <a href="/transaction/product/modify" class="ms-2 d-flex align-items-center">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="black" xmlns="http://www.w3.org/2000/svg">
         <path d="M19.14,12.94c0.04-0.31,0.06-0.63,0.06-0.94s-0.02-0.63-0.06-0.94l2.03-1.58c0.18-0.14,0.23-0.4,0.12-0.61l-1.92-3.32
       c-0.11-0.2-0.35-0.28-0.57-0.22l-2.39,0.96c-0.5-0.38-1.05-0.7-1.65-0.94L14.5,2.81C14.47,2.58,14.27,2.42,14.03,2.42h-4.06
@@ -37,6 +38,7 @@
       s1.61-3.6,3.6-3.6s3.6,1.61,3.6,3.6S13.99,15.6,12,15.6z"/>
       </svg>
     </a>
+    <% } %>
   </div>
 <!-- Transaction Entry 2 -->
   <div class="d-flex align-items-center mb-3">
@@ -50,7 +52,8 @@
     </div>
 
     <!-- Gear Icon -->
-    <a href="transactionmodify.ejs" class="ms-2 d-flex align-items-center">
+    <% if (user.leader === true) { %>
+    <a href="/transaction/product/modify" class="ms-2 d-flex align-items-center">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="black" xmlns="http://www.w3.org/2000/svg">
         <path d="M19.14,12.94c0.04-0.31,0.06-0.63,0.06-0.94s-0.02-0.63-0.06-0.94l2.03-1.58c0.18-0.14,0.23-0.4,0.12-0.61l-1.92-3.32
       c-0.11-0.2-0.35-0.28-0.57-0.22l-2.39,0.96c-0.5-0.38-1.05-0.7-1.65-0.94L14.5,2.81C14.47,2.58,14.27,2.42,14.03,2.42h-4.06
@@ -62,6 +65,7 @@
       s1.61-3.6,3.6-3.6s3.6,1.61,3.6,3.6S13.99,15.6,12,15.6z"/>
       </svg>
     </a>
+    <% } %>
   </div>
 </div>
 <%- include('footer') -%>

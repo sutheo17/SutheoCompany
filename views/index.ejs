@@ -1,17 +1,19 @@
 <%- include('header', {pagetitle: 'SutheoCompany'}) -%>
 <div class="container mt-4">
+    <% if (user.leader === true) { %>
     <a href="/product/add" class="btn btn-success mb-3">Add new</a>
+    <% } %>
     <div class="row">
         <!-- Product 1 -->
         <div class="col-md-6 mb-3">
             <div class="border p-3 d-flex align-items-center">
                 <!-- Clickable wrapper for image, status, category, and name -->
-                <a href="/product/modify" class="text-decoration-none text-dark d-flex" style="text-decoration: none;">
+                <a href="/product" class="text-decoration-none text-dark d-flex" style="text-decoration: none;">
                     <img src="https://placehold.co/80x150" alt="Product Image" width="80" class="me-3">
                 </a>
 
                 <div class="w-100">
-                    <a href="/product/modify" class="text-decoration-none text-dark">
+                    <a href="/product" class="text-decoration-none text-dark">
                         <p class="text-success mb-1">In stock</p>
                         <p class="mb-1">Category</p>
                         <p class="mb-1">Name</p>

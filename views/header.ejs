@@ -13,9 +13,20 @@
         <a href="/"><img src="/logo.png" alt="Logo" width="40" height="40" style="border: 1px solid whitesmoke;"></a>
         <a class="navbar-brand ps-3" href="/project">Planner</a>
         <a class="navbar-brand" href="/trends">Trends</a>
+        <% if (typeof user !== 'undefined' && user.leader === true) { %>
         <a class="navbar-brand" href="/quote">Quote</a>
         <a class="navbar-brand" href="/pricing">Pricing</a>
         <a class="navbar-brand" href="/customer">Customers</a>
-        <div class="ms-auto text-white">Logged in as: <strong>USERNAME</strong></div>
+        <% } %>
+        <% if (typeof user !== 'undefined') { %>
+            <div class="ms-auto d-flex align-items-center text-white">
+                Logged in as: <strong class="mx-2"><%= user.name %></strong>
+                <form action="/logout" method="POST" class="d-inline">
+                    <button type="submit" class="btn btn-sm btn-outline-light">Logout</button>
+                </form>
+            </div>
+        <% } else { %>
+            <a class="btn btn-outline-light ms-auto" href="/login">Login</a>
+        <% } %>
     </div>
 </nav>
