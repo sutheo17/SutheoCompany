@@ -4,9 +4,10 @@ const db = require('../config/db');
 const ProductSchema = new Schema({
     name: String,
     item_number: String,
-    category: String, // enum nélkül
+    category: String,
     image_path: String,
     subcategory: String,
+    color: String,
     manufacturer: String,
     supplier: String,
     in_stock: Number,
@@ -15,7 +16,8 @@ const ProductSchema = new Schema({
         height: Number,
         width: Number,
         quantity: Number
-    }]
+    }],
+    price: Number
 });
 
 const Product = db.model('Product', ProductSchema);

@@ -23,13 +23,19 @@ module.exports = function (objectRepository) {
         product.category = req.body.category;
         product.manufacturer = req.body.manufacturer;
         product.supplier = req.body.supplier;
+        product.price = 0
 
-        if (req.body.category === 'discrete') {
+        if (req.body.category === 'Discrete') {
             product.subcategory = req.body.subcategory;
             product.in_stock = parseInt(req.body.in_stock, 10) || 0;
         }
+        else
+        {
+            product.thickness = parseInt(req.body.thickness, 10) || 0;
+            product.color = req.body.color;
+        }
 
-        if (req.body.category === 'sheet' && req.body.sizes) {
+        if (req.body.category === 'Sheet' && req.body.sizes) {
             const sizeStrings = req.body.sizes
                 .split(';')
                 .map(s => s.trim())
@@ -44,7 +50,7 @@ module.exports = function (objectRepository) {
                     width: parseInt(match[2], 10),
                     quantity: parseInt(match[3], 10)
                 };
-            }).filter(Boolean); // kiszűri az érvénytelen sorokat
+            }).filter(Boolean);
         }
 
         if (req.file) {
@@ -56,7 +62,6 @@ module.exports = function (objectRepository) {
         product.save()
             .then(() =>
             {
-                console.log("124124124")
                 res.redirect('/')
             })
             .catch((err) => next(err));

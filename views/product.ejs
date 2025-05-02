@@ -8,41 +8,58 @@
         </svg>
       </a>
       <% if (user.leader === true) { %>
-      <a href="/product/modify" class="btn btn-dark">Modify</a>
+        <a href="/product/modify/<%= product._id %>" class="btn btn-dark">Modify</a>
       <% } %>
     </div>
   </div>
 
-    <div class="row mt-4">
-      <div class="col-md-12">
-        <table class="table table-custom-product">
+  <div class="row mt-4">
+    <div class="col-md-12">
+      <table class="table table-custom-product">
+        <tr>
+          <td class="col-3 align-middle" rowspan="6">
+            <img src="<%= product.image_path ? '/images/' + product.image_path : 'https://placehold.co/310x250' %>" class="img-fluid" alt="Item Image">
+          </td>
+          <td class="col-6">Name: <span class="text-danger"><%= product.name %></span></td>
+        </tr>
+        <tr>
+          <td class="col-6">Item number: <span class="text-danger"><%= product.item_number %></span></td>
+        </tr>
+        <tr>
+          <td class="col-3">Category: <span class="text-danger"><%= product.category %></span></td>
+          <% if (product.category.toLowerCase() === 'sheet') { %>
+            <td class="col-3">Color: <span class="text-danger"><%= product.color %></span></td>
+        <% } else { %>
+            <td class="col-3">Sub-category: <span class="text-danger"><%= product.subcategory %></span></td>
+        <% } %>
+
+        </tr>
+        <% if (product.category.toLowerCase() === 'sheet') { %>
           <tr>
-            <td class="col-3" rowspan="6" class="align-middle">
-              <img src="https://placehold.co/310x250" class="img-fluid" alt="Item Image">
+            <td class="col-3">
+              Sizes:
+              <span class="text-danger">
+      <%= product.sizes.map(size => `${size.height}x${size.width} (${size.quantity})`).join(', ') %>
+            <td class="col-3">Thickness: <span class="text-danger"><%= product.thickness %></span> mm</td>
+    </span>
             </td>
-            <td class="col-6">Name: <span class="text-danger">string</span></td>
           </tr>
+        <% } else { %>
           <tr>
-            <td class="col-6">Item number: <span class="text-danger">number</span> pcs</td>
+            <td class="col-6">In stock: <span class="text-danger"><%= product.in_stock %></span> pcs</td>
           </tr>
-          <tr>
-            <td class="col-3">Category: <span class="text-danger">discrete material</span></td>
-            <td class="col-3">Sub-category: <span class="text-danger">number</span> pcs</td>
-          </tr>
-          <tr>
-            <td class="col-6">In stock: <span class="text-danger">number</span> pcs</td>
-          </tr>
-          <tr>
-            <td class="col-3">Manufacturer: <span class="text-danger">string</span></td>
-            <td class="col-3">Supplier: <span class="text-danger">string</span></td>
-          </tr>
-          <tr>
-            <td class="col-6" colspan="2">
-              <a href="/transaction/product" class="btn btn-success">View transactions</a>
-            </td>
-          </tr>
-        </table>
-      </div>
+        <% } %>
+        <tr>
+          <td class="col-3">Manufacturer: <span class="text-danger"><%= product.manufacturer %></span></td>
+          <td class="col-3">Supplier: <span class="text-danger"><%= product.supplier %></span></td>
+        </tr>
+        <tr>
+          <td class="col-6" colspan="2">
+            <a href="/transaction/product/<%= product._id %>" class="btn btn-success">View transactions</a>
+          </td>
+        </tr>
+      </table>
     </div>
+  </div>
 </div>
 <%- include('footer') -%>

@@ -1,110 +1,73 @@
 <%- include('header', {pagetitle: 'SutheoCompany'}) -%>
 <div class="container mt-4">
     <% if (user.leader === true) { %>
-    <a href="/product/add" class="btn btn-success mb-3">Add new</a>
+        <a href="/product/add" class="btn btn-success mb-3">Add new</a>
     <% } %>
-    <div class="row">
-        <!-- Product 1 -->
-        <div class="col-md-6 mb-3">
-            <div class="border p-3 d-flex align-items-center">
-                <!-- Clickable wrapper for image, status, category, and name -->
-                <a href="/product" class="text-decoration-none text-dark d-flex" style="text-decoration: none;">
-                    <img src="https://placehold.co/80x150" alt="Product Image" width="80" class="me-3">
-                </a>
-
-                <div class="w-100">
-                    <a href="/product" class="text-decoration-none text-dark">
-                        <p class="text-success mb-1">In stock</p>
-                        <p class="mb-1">Category</p>
-                        <p class="mb-1">Name</p>
-                    </a>
-
-                    <!-- Inputs should NOT be inside <a> -->
-                    <div class="d-flex" style="gap: 8px;">
-                        <input type="text" class="form-control" placeholder="Pieces" style="max-width: 150px;">
-                        <button class="btn btn-dark">Take out</button>
+        <div class="row">
+            <% if (products.length === 0) { %>
+                <div class="col-12 text-center">
+                    <p class="text-muted fs-4 mt-5">There are currently no products in database.</p>
+                </div>
+            <% } else { %>
+                <% products.forEach(product => {
+                    var outOfStock = false
+                    const isSheet = product.category.toLowerCase() === 'sheet';
+                    if (!isSheet) {
+                        outOfStock = product.in_stock === 0;
+                    }
+                    else
+                    {
+                        outOfStock = product.sizes.length === 0;
+                    }
+                %>
+                <div class="col-md-6 mb-3">
+                    <div class="border p-3 d-flex align-items-center">
+                        <a href="/product/<%= product._id %>" class="text-decoration-none text-dark d-flex">
+                            <img src="<%= product.image_path ? '/images/' + product.image_path : 'https://placehold.co/80x150' %>" alt="Product Image" width="80" class="me-3">
+                        </a>
+                        <div class="w-100">
+                            <a href="/product/<%= product._id %>" class="text-decoration-none text-dark">
+                                <p class="<%= outOfStock ? 'text-danger' : 'text-success' %> mb-1">
+                                    <% if (isSheet) { %>
+                                        <%= outOfStock ? 'Out of stock' : 'In stock'%>
+                                    <% } else { %>
+                                        <%= outOfStock ? 'Out of stock' : 'In stock (' + product.in_stock + ')' %>
+                                    <% } %>
+                                </p>
+                                <p class="mb-1"><%= product.name %></p>
+                                <p class="mb-1"><%= product.item_number %></p>
+                            </a>
+                            <div class="d-flex align-items-center" style="gap: 8px; flex-wrap: nowrap;">
+                                <% if (isSheet) { %>
+                                    <select class="form-select mb-2" style="min-width: 120px;" <%= outOfStock ? 'disabled' : '' %>>
+                                        <% product.sizes.forEach(size => { %>
+                                            <option><%= size.height %> x <%= size.width %></option>
+                                        <% }) %>
+                                    </select>
+                                    <select class="form-select mb-2" style="min-width: 100px;" <%= outOfStock ? 'disabled' : '' %>>
+                                        <% product.sizes.forEach(size => { %>
+                                            <option><%= size.quantity %> pcs</option>
+                                        <% }) %>
+                                    </select>
+                                    <button class="btn btn-dark mb-2" style="white-space: nowrap; min-width: 100px;" <%= outOfStock ? 'disabled' : '' %>>
+                                        Take out
+                                    </button>
+                                <% } else { %>
+                                        <input type="number"
+                                               class="form-control"
+                                               style="max-width: 150px;"
+                                               min="1"
+                                               max="<%= product.in_stock %>"
+                                               value="1"
+                                                <%= outOfStock ? 'disabled' : '' %>>
+                                    <button class="btn btn-dark" <%= outOfStock ? 'disabled' : '' %>>Take out</button>
+                                <% } %>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
+                <% }) %>
+            <% } %>
         </div>
-
-        <!-- Product 2 -->
-        <div class="col-md-6 mb-3">
-            <div class="border p-3 d-flex align-items-center">
-                <!-- Clickable wrapper for image, status, category, and name -->
-                <a href="/product" class="text-decoration-none text-dark d-flex" style="text-decoration: none;">
-                    <img src="https://placehold.co/80x150" alt="Product Image" width="80" class="me-3">
-                </a>
-
-                <div class="w-100">
-                    <a href="/product" class="text-decoration-none text-dark">
-                        <p class="text-danger mb-1">Out of stock</p>
-                        <p class="mb-1">Category</p>
-                        <p class="mb-1">Name</p>
-                    </a>
-
-                    <!-- Inputs should NOT be inside <a> -->
-                    <div class="d-flex" style="gap: 8px;">
-                        <input type="text" class="form-control" placeholder="Pieces" style="max-width: 150px;" disabled>
-                        <button class="btn btn-dark" disabled >Take out</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Product 3 -->
-        <div class="col-md-6 mb-3">
-            <div class="border p-3 d-flex align-items-center">
-                <!-- Clickable wrapper for image, status, category, and name -->
-                <a href="/product" class="text-decoration-none text-dark d-flex" style="text-decoration: none;">
-                    <img src="https://placehold.co/80x150" alt="Product Image" width="80" class="me-3">
-                </a>
-
-                <div class="w-100">
-                    <a href="p/product" class="text-decoration-none text-dark">
-                        <p class="text-danger mb-1">Out of stock</p>
-                        <p class="mb-1">Category</p>
-                        <p class="mb-1">Name</p>
-                    </a>
-
-                    <!-- Inputs should NOT be inside <a> -->
-                    <div class="d-flex flex-nowrap" style="gap: 8px;">
-                        <select class="form-select mb-2" disabled><option>Sizes</option></select>
-                        <select class="form-select mb-2" disabled><option>Pieces</option></select>
-                        <button class="btn btn-dark mb-2" disabled style="white-space: nowrap; padding: 0.375rem 0.75rem;">
-                            Take out
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Product 4 -->
-        <div class="col-md-6 mb-3">
-            <div class="border p-3 d-flex align-items-center">
-                <!-- Clickable wrapper for image, status, category, and name -->
-                <a href="/product" class="text-decoration-none text-dark d-flex" style="text-decoration: none;">
-                    <img src="https://placehold.co/80x150" alt="Product Image" width="80" class="me-3">
-                </a>
-
-                <div class="w-100">
-                    <a href=/product" class="text-decoration-none text-dark">
-                        <p class="text-success mb-1">In stock</p>
-                        <p class="mb-1">Category</p>
-                        <p class="mb-1">Name</p>
-                    </a>
-
-                    <!-- Inputs should NOT be inside <a> -->
-                    <div class="d-flex" style="gap: 8px;">
-                        <select class="form-select mb-2"><option>Sizes</option></select>
-                        <select class="form-select mb-2"><option>Pieces</option></select>
-                        <button class="btn btn-dark mb-2" style="white-space: nowrap; padding: 0.375rem 0.75rem;">
-                            Take out
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 <%- include('footer') -%>

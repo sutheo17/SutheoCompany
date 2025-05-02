@@ -1,6 +1,7 @@
 const express = require('express');
 const session = require('express-session');
 const app = express();
+const path = require('path');
 
 app.set('view engine', 'ejs');
 
@@ -26,6 +27,7 @@ require('./routes/transactionTask')(app);
 
 app.use(express.static('static'));
 app.use(express.static('images'));
+app.use('/images', express.static(path.join('C:/SutheoCompany/images')));
 
 const server = app.listen(3000, function () {
     console.log("Listening on: 3000")

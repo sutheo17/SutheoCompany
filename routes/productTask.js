@@ -1,6 +1,7 @@
 const renderMW =  require('../middleware/common/render.js')
 const checkAuthMW = require("../middleware/auth/checkAuth");
 const saveProductMW = require('../middleware/product/saveProduct');
+const getProductMW = require('../middleware/product/getProduct');
 
 const ProductModel = require('../models/product');
 
@@ -41,14 +42,15 @@ module.exports = function (app) {
         renderMW(objectRepository, 'pricingmodify')
     );
 
-    app.get('/product',
-        checkAuthMW(false),
-        renderMW(objectRepository, 'product')
-    );
-
     app.get('/product/add',
         checkAuthMW(true),
         renderMW(objectRepository, 'productmodify')
+    );
+
+    app.get('/product/:productid',
+        checkAuthMW(false),
+        getProductMW(objectRepository),
+        renderMW(objectRepository, 'product')
     );
 
     app.post('/product/add',

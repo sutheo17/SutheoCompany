@@ -29,8 +29,8 @@
                   Category:
                   <select name="category" id="categorySelect" class="form-control text-danger" required>
                     <option value="">-- Select --</option>
-                    <option value="discrete">discrete</option>
-                    <option value="sheet">sheet</option>
+                    <option value="Discrete">Discrete</option>
+                    <option value="Sheet">Sheet</option>
                   </select>
                 </div>
 
@@ -112,14 +112,14 @@
       manufacturerSupplierRow.style.display = show ? '' : 'none';
       variantFieldsRow.style.display = show ? '' : 'none';
 
-      if (value === 'discrete') {
+      if (value === 'Discrete') {
         subColorLabel.innerText = 'Sub-category:';
         subColorInput.name = 'subcategory';
         subColorInput.placeholder = 'Sub-category';
 
         discreteFields.style.display = '';
         sheetFields.style.display = 'none';
-      } else if (value === 'sheet') {
+      } else if (value === 'Sheet') {
         subColorLabel.innerText = 'Color:';
         subColorInput.name = 'color';
         subColorInput.placeholder = 'Color';
