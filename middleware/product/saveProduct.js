@@ -9,7 +9,7 @@ module.exports = function (objectRepository) {
             typeof req.body.item_number === 'undefined' ||
             typeof req.body.category === 'undefined'
         ) {
-            return next(); // hiányos adat -> render page újra
+            return next();
         }
 
         if (typeof res.locals.product === 'undefined') {
@@ -17,8 +17,6 @@ module.exports = function (objectRepository) {
         }
 
         const product = res.locals.product;
-
-        console.log(product)
 
         product.name = req.body.name;
         product.item_number = req.body.item_number;
@@ -31,23 +29,29 @@ module.exports = function (objectRepository) {
             product.in_stock = parseInt(req.body.in_stock, 10) || 0;
         }
 
-        if (req.body.category === 'sheet') {
-            product.color = req.body.color;
-            product.thickness = parseFloat(req.body.thickness);
+        if (req.body.category === 'sheet' && req.body.sizes) {
+            const sizeStrings = req.body.sizes
+                .split(';')
+                .map(s => s.trim())
+                .filter(s => s.length > 0);
 
-            const sizeMatch = req.body.sizes?.match(/^(\d+)[xX](\d+)[xX](\d+)$/);
-            if (sizeMatch) {
-                product.sizes = {
-                    length: parseInt(sizeMatch[1], 10),
-                    width: parseInt(sizeMatch[2], 10)
+            product.sizes = sizeStrings.map(entry => {
+                const match = entry.match(/^(\d+)[xX](\d+)[xX](\d+)$/);
+                if (!match) return null;
+
+                return {
+                    height: parseInt(match[1], 10),
+                    width: parseInt(match[2], 10),
+                    quantity: parseInt(match[3], 10)
                 };
-            }
+            }).filter(Boolean); // kiszűri az érvénytelen sorokat
         }
 
-        // ha fájl jön (multer már dolgozott)
         if (req.file) {
-            product.image_path = `/images/${req.file.filename}`;
+            product.image_path = `${req.file.filename}`;
         }
+
+        console.log(product);
 
         product.save()
             .then(() =>

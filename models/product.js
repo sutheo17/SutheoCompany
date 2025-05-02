@@ -11,10 +11,11 @@ const ProductSchema = new Schema({
     supplier: String,
     in_stock: Number,
     thickness: Number,
-    sizes: {
-        length: Number,
-        width: Number
-    }
+    sizes: [{
+        height: Number,
+        width: Number,
+        quantity: Number
+    }]
 });
 
 const Product = db.model('Product', ProductSchema);

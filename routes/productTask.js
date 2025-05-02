@@ -54,12 +54,7 @@ module.exports = function (app) {
     app.post('/product/add',
         checkAuthMW(true),
         upload.single('photo'),
-        upload.single('photo'),
-        (req, res, next) => {
-            console.log('DEBUG FILE:', req.file); // <-- ide
-            console.log('DEBUG BODY:', req.body); // <-- ide
-        }
-        //saveProductMW(objectRepository) // itt végződjön a lánc!
+        saveProductMW(objectRepository)
     );
 
     app.get('/product/modify',
