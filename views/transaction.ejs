@@ -22,7 +22,7 @@
         <!-- Box -->
         <div class="border p-3 d-flex justify-content-between align-items-center flex-grow-1">
           <div>
-            <p class="mb-1">User: <span class="text-danger"><%= transaction.user %></span></p>
+            <p class="mb-1">User: <span class="text-danger"><%= transaction._user.name %> (<%= transaction._user.username %>)</span></p>
             <p class="mb-0">Date: <span class="text-danger">
     <%= new Date(transaction.date).toLocaleString('en-GB', {
         year: 'numeric',

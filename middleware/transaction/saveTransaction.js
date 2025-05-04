@@ -32,7 +32,7 @@ module.exports = function (objectRepository) {
         console.log(diff)
 
         // Tranzakció mezők (közös)
-        transaction.user = req.body.user || user.username;
+        transaction._user = res.locals.transactionUser || user._id;
         transaction.date = parsedDate;
         transaction._product = product._id;
         transaction.quantity = qty;

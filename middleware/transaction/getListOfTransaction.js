@@ -10,6 +10,7 @@ module.exports = function (objectRepository) {
         }
         TransactionModel.find({_product: res.locals.product._id})
             .populate('_product')
+            .populate('_user')
             .then((transactions) => {
                 console.log(transactions);
             res.locals.transactions = transactions;

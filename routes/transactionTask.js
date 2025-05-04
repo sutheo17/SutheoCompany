@@ -4,6 +4,7 @@ const saveTransactionMW =  require('../middleware/transaction/saveTransaction.js
 const getListOfTransactionMW =  require('../middleware/transaction/getListOfTransaction.js')
 const getListOfUserMW =  require('../middleware/common/getListOfUser.js')
 const getTransactionMW =  require('../middleware/transaction/getTransaction.js')
+const getUserMW =  require('../middleware/common/getUser.js')
 const ProductModel = require("../models/product");
 const TransactionModel = require("../models/transaction");
 const UserModel = require("../models/user");
@@ -17,9 +18,10 @@ module.exports = function (app) {
     };
 
     app.post('/transaction/save/:productid/:transactionid?',
-        checkAuthMW(true),
+        checkAuthMW(false),
         getProductMW(objectRepository),
         getTransactionMW(objectRepository),
+        getUserMW(objectRepository),
         saveTransactionMW(objectRepository)
     );
 
