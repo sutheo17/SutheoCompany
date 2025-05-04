@@ -1,32 +1,67 @@
 <%- include('header', {pagetitle: 'TransactionModify'}) -%>
+
+<%
+// Segédfüggvény: helyi idő formátum datetime-local-hoz
+function formatLocalDatetime(date) {
+  const d = new Date(date);
+  const pad = n => n.toString().padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+%>
+
 <div class="container mt-3" style="max-width: 400px;">
-  <form action="/">
+  <form method="POST" action="/transaction/save/<%= transaction._product._id %>/<%= transaction._id %>">
+    <!-- USER -->
     <div class="mb-3">
       <label for="userSelect" class="form-label fw-bold">User:</label>
-      <select class="form-select" id="userSelect">
-        <option selected>users</option>
-        <option>User 1</option>
-        <option>User 2</option>
+      <select class="form-select" id="userSelect" name="user" required>
+        <option disabled <%= !transaction.user ? 'selected' : '' %>>Select a user</option>
+        <% users.forEach(user => { %>
+          <option value="<%= user.username %>" <%= transaction.user === user.username ? 'selected' : '' %>>
+            <%= user.username %>
+          </option>
+        <% }) %>
       </select>
     </div>
 
+    <!-- DATETIME -->
     <div class="mb-3">
-      <label for="dateInput" class="form-label fw-bold">Date:</label>
-      <input type="date" class="form-control" id="dateInput">
+      <label for="datetimeInput" class="form-label fw-bold">Date and time:</label>
+      <input type="datetime-local"
+             class="form-control"
+             id="datetimeInput"
+             name="date"
+             required
+             value="<%= transaction.date ? formatLocalDatetime(transaction.date) : '' %>">
     </div>
 
+    <!-- QUANTITY -->
     <div class="mb-3">
-      <label for="itemsInput" class="form-label fw-bold">Number of items taken out:</label>
-      <input type="number" class="form-control" id="itemsInput" placeholder="int">
+      <label for="itemsInput" class="form-label fw-bold">
+        Number of items taken out
+        <% if (transaction._product.category === 'Sheet') { %>
+          for size <%= transaction.size.height %>x<%= transaction.size.width %>:
+        <% } else { %>
+          :
+        <% } %>
+      </label>
+      <input type="number"
+             class="form-control"
+             id="itemsInput"
+             name="quantity"
+             min="1"
+             required
+             value="<%= transaction.quantity || '' %>">
     </div>
 
+    <!-- BUTTONS -->
     <div class="d-flex justify-content-between mt-4">
       <button type="submit" class="btn btn-success">Save</button>
-      <a href="/">
+      <a href="/transaction/<%= transaction._product._id %>">
         <button type="button" class="btn btn-danger">Cancel</button>
       </a>
-
     </div>
   </form>
 </div>
+
 <%- include('footer') -%>

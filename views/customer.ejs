@@ -1,57 +1,25 @@
 <%- include('header', {pagetitle: 'Customer'}) -%>
 <div class="container mt-4">
-  <a href="customer/add" class="btn btn-success mb-3">Add new</a>
+  <a href="/customer/add" class="btn btn-success mb-3">Add new</a>
   <div class="row">
-    <!-- Product 1 -->
-
-    <div class="col-md-6 mb-3">
-      <a href="/customer/modify" class="text-decoration-none text-reset">
-        <div class="border p-3 d-flex align-items-center">
-          <div class="w-100">
-            <p class="mb-1">Name: <span class="text-danger">string</span></p>
-            <p class="mb-1">Mobile number: <span class="text-danger">string</span></p>
-          </div>
+    <% if (customers.length === 0) { %>
+      <div class="col-12 text-center">
+        <p class="text-muted fs-4 mt-5">There are currently no customers in database.</p>
+      </div>
+    <% } else { %>
+      <% customers.forEach(function(customer) { %>
+        <div class="col-md-6 mb-3">
+          <a href="/customer/modify/<%= customer._id %>" class="text-decoration-none text-reset">
+            <div class="border p-3 d-flex align-items-center">
+              <div class="w-100">
+                <p class="mb-1">Name: <span class="text-danger"><%= customer.name %></span></p>
+                <p class="mb-1">Mobile number: <span class="text-danger"><%= customer.phone %></span></p>
+              </div>
+            </div>
+          </a>
         </div>
-      </a>
-    </div>
-
-
-
-    <!-- Product 2 -->
-    <div class="col-md-6 mb-3">
-      <a href="/customer/modify" class="text-decoration-none text-reset">
-        <div class="border p-3 d-flex align-items-center">
-          <div class="w-100">
-            <p class="mb-1">Name: <span class="text-danger">string</span></p>
-            <p class="mb-1">Mobile number: <span class="text-danger">string</span></p>
-          </div>
-        </div>
-      </a>
-    </div>
-
-    <!-- Product 3 -->
-    <div class="col-md-6 mb-3">
-      <a href="/customer/modify" class="text-decoration-none text-reset">
-        <div class="border p-3 d-flex align-items-center">
-          <div class="w-100">
-            <p class="mb-1">Name: <span class="text-danger">string</span></p>
-            <p class="mb-1">Mobile number: <span class="text-danger">string</span></p>
-          </div>
-        </div>
-      </a>
-    </div>
-
-    <!-- Product 4 -->
-    <div class="col-md-6 mb-3">
-      <a href="/customer/modify" class="text-decoration-none text-reset">
-        <div class="border p-3 d-flex align-items-center">
-          <div class="w-100">
-            <p class="mb-1">Name: <span class="text-danger">string</span></p>
-            <p class="mb-1">Mobile number: <span class="text-danger">string</span></p>
-          </div>
-        </div>
-      </a>
-    </div>
-</div>
+      <% }) %>
+    <% } %>
+  </div>
 </div>
 <%- include('footer') -%>

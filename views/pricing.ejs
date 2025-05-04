@@ -1,60 +1,19 @@
 <%- include('header', {pagetitle: 'Pricing'}) -%>
 <div class="container mt-4">
   <div class="row">
-    <!-- Product 1 -->
-
-    <div class="col-md-6 mb-3">
-      <a href="/pricing/modify" class="text-decoration-none text-reset">
-        <div class="border p-3 d-flex align-items-center">
-          <div class="w-100">
-            <p class="mb-1">Name: <span class="text-danger">string</span></p>
-            <p class="mb-1">Item number: <span class="text-danger">string</span></p>
-            <p class="mb-1">Price: <span class="text-danger">int</span></p>
+    <% products.forEach(function(product) { %>
+      <div class="col-md-6 mb-3">
+        <a href="/pricing/modify/<%= product.id %>" class="text-decoration-none text-reset">
+          <div class="border p-3 d-flex align-items-center">
+            <div class="w-100">
+              <p class="mb-1">Name: <span class="text-danger"><%= product.name %></span></p>
+              <p class="mb-1">Item number: <span class="text-danger"><%= product.item_number %></span></p>
+              <p class="mb-1">Price: <span class="text-danger"><%= product.price %></span></p>
+            </div>
           </div>
-        </div>
-      </a>
-    </div>
-
-
-
-    <!-- Product 2 -->
-    <div class="col-md-6 mb-3">
-      <a href="/pricing/modify" class="text-decoration-none text-reset">
-        <div class="border p-3 d-flex align-items-center">
-          <div class="w-100">
-            <p class="mb-1">Name: <span class="text-danger">string</span></p>
-            <p class="mb-1">Item number: <span class="text-danger">string</span></p>
-            <p class="mb-1">Price: <span class="text-danger">int</span></p>
-          </div>
-        </div>
-      </a>
-    </div>
-
-    <!-- Product 3 -->
-    <div class="col-md-6 mb-3">
-      <a href="/pricing/modify" class="text-decoration-none text-reset">
-        <div class="border p-3 d-flex align-items-center">
-          <div class="w-100">
-            <p class="mb-1">Name: <span class="text-danger">string</span></p>
-            <p class="mb-1">Item number: <span class="text-danger">string</span></p>
-            <p class="mb-1">Price: <span class="text-danger">int</span></p>
-          </div>
-        </div>
-      </a>
-    </div>
-
-    <!-- Product 4 -->
-    <div class="col-md-6 mb-3">
-      <a href="/pricing/modify" class="text-decoration-none text-reset">
-        <div class="border p-3 d-flex align-items-center">
-          <div class="w-100">
-            <p class="mb-1">Name: <span class="text-danger">string</span></p>
-            <p class="mb-1">Item number: <span class="text-danger">string</span></p>
-            <p class="mb-1">Price: <span class="text-danger">int</span></p>
-          </div>
-        </div>
-      </a>
-    </div>
+        </a>
+      </div>
+    <% }) %>
   </div>
 </div>
 <%- include('footer') -%>

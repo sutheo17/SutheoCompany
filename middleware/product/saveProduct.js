@@ -30,7 +30,7 @@ module.exports = function (objectRepository) {
         product.category = req.body.category;
         product.manufacturer = req.body.manufacturer;
         product.supplier = req.body.supplier;
-        product.price = 0;
+        product.price = req.body.price || 0;
 
         // Diszkrét vs Sheet mezők
         if (req.body.category === 'Discrete') {

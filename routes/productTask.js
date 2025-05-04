@@ -1,6 +1,7 @@
 const renderMW =  require('../middleware/common/render.js')
 const checkAuthMW = require("../middleware/auth/checkAuth");
 const saveProductMW = require('../middleware/product/saveProduct');
+const saveProductPriceMW = require('../middleware/product/saveProductPrice');
 const getProductMW = require('../middleware/product/getProduct');
 const deleteProductMW = require('../middleware/product/deleteProduct');
 
@@ -9,6 +10,7 @@ const ProductModel = require('../models/product');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const getListOfProductMW = require("../middleware/product/getListOfProduct");
 
 const upload = multer({
     limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
@@ -35,12 +37,20 @@ module.exports = function (app) {
 
     app.get('/pricing',
         checkAuthMW(true),
+        getListOfProductMW(objectRepository),
         renderMW(objectRepository, 'pricing')
     );
 
-    app.get('/pricing/modify',
+    app.get('/pricing/modify/:productid',
         checkAuthMW(true),
+        getProductMW(objectRepository),
         renderMW(objectRepository, 'pricingmodify')
+    );
+
+    app.post('/pricing/save/:productid',
+        checkAuthMW(true),
+        getProductMW(objectRepository),
+        saveProductPriceMW(objectRepository)
     );
 
     app.post('/product/save/:productid?',
@@ -52,6 +62,10 @@ module.exports = function (app) {
 
     app.get('/product/add',
         checkAuthMW(true),
+        (req, res, next) => {
+            res.locals.product = undefined;
+            return next();
+        },
         renderMW(objectRepository, 'productmodify')
     );
 

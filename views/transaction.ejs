@@ -23,7 +23,15 @@
         <div class="border p-3 d-flex justify-content-between align-items-center flex-grow-1">
           <div>
             <p class="mb-1">User: <span class="text-danger"><%= transaction.user %></span></p>
-            <p class="mb-0">Date: <span class="text-danger"><%= new Date(transaction.date).toLocaleString() %></span></p>
+            <p class="mb-0">Date: <span class="text-danger">
+    <%= new Date(transaction.date).toLocaleString('en-GB', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
+    }) %>
+  </span></p>
           </div>
             <% if (transaction._product.category === 'Discrete') { %>
                 <h4 class="mb-0">-<%= transaction.quantity %></h4>
@@ -35,7 +43,7 @@
 
         <!-- Gear Icon -->
         <% if (user.leader === true) { %>
-          <a href="/transaction/product/modify/<%= transaction._id %>" class="ms-2 d-flex align-items-center">
+          <a href="/transaction/modify/<%= transaction._product._id %>/<%= transaction._id %>" class="ms-2 d-flex align-items-center">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="black" xmlns="http://www.w3.org/2000/svg">
               <path d="M19.14,12.94c0.04-0.31,0.06-0.63,0.06-0.94s-0.02-0.63-0.06-0.94l2.03-1.58c0.18-0.14,0.23-0.4,0.12-0.61l-1.92-3.32
             c-0.11-0.2-0.35-0.28-0.57-0.22l-2.39,0.96c-0.5-0.38-1.05-0.7-1.65-0.94L14.5,2.81C14.47,2.58,14.27,2.42,14.03,2.42h-4.06

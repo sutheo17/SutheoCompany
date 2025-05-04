@@ -1,39 +1,69 @@
 <%- include('header', {pagetitle: 'CustomerModify'}) -%>
 <div class="container d-flex justify-content-center align-items-center mt-5">
-  <form class="w-100" style="max-width: 400px;">
-    <div class="mb-3">
-      <label class="form-label">Name: <span class="text-primary">string</span></label>
-    </div>
-    <div class="mb-3">
-      <label class="form-label">Email: <span class="text-primary">string</span></label>
-    </div>
-    <div class="mb-3">
-      <label class="form-label">County:
-        <select class="form-select d-inline w-auto">
-          <option selected>counties</option>
-          <option>County 1</option>
-          <option>County 2</option>
-          <option>County 3</option>
-        </select>
-      </label>
-    </div>
-    <div class="mb-3">
-      <label class="form-label">City: <span class="text-primary">string</span></label>
-    </div>
-    <div class="mb-3">
-      <label class="form-label">Zip: <span class="text-primary">int</span></label>
-    </div>
-    <div class="mb-3">
-      <label class="form-label">Address: <span class="text-primary">string</span></label>
-    </div>
-    <div class="mb-3">
-      <label class="form-label">Mobile number: <span class="text-primary">string</span></label>
-    </div>
+  <div class="w-100" style="max-width: 400px;">
+    <!-- Delete gomb: külön formként -->
+    <% if (customer?._id) { %>
+      <form method="POST" action="/customer/delete/<%= customer._id %>" class="text-center mt-3" onsubmit="return confirm('Are you sure you want to delete this customer?');">
+        <input type="hidden" name="customer_id" value="<%= customer._id %>">
+        <button type="submit" class="btn btn-danger">Delete</button>
+      </form>
+    <% } %>
+    <form method="POST" action="/customer/save/<%= customer?._id || '' %>">
 
-    <div class="d-flex gap-3">
-      <button type="submit" class="btn btn-success">Save</button>
-      <button type="button" class="btn btn-danger">Cancel</button>
-    </div>
-  </form>
+      <!-- input mezők -->
+      <div class="mb-3">
+        <label class="form-label">Name:</label>
+        <input type="text" name="name" class="form-control" value="<%= customer?.name || '' %>">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Email:</label>
+        <input type="email" name="email" class="form-control" value="<%= customer?.email || '' %>">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">County:</label>
+        <select name="county" class="form-select">
+          <% [
+            'Bács-Kiskun', 'Baranya', 'Békés', 'Borsod-Abaúj-Zemplén',
+            'Csongrád-Csanád', 'Fejér', 'Győr-Moson-Sopron', 'Hajdú-Bihar',
+            'Heves', 'Jász-Nagykun-Szolnok', 'Komárom-Esztergom', 'Nógrád',
+            'Pest', 'Somogy', 'Szabolcs-Szatmár-Bereg', 'Tolna', 'Vas',
+            'Veszprém', 'Zala', 'Budapest'
+          ].forEach(function(county) { %>
+            <option value="<%= county %>" <%= customer?.county === county ? 'selected' : '' %>><%= county %></option>
+          <% }) %>
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">City:</label>
+        <input type="text" name="city" class="form-control" value="<%= customer?.city || '' %>">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Zip:</label>
+        <input type="number" name="zip" class="form-control" value="<%= customer?.zip || '' %>">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Address:</label>
+        <input type="text" name="address" class="form-control" value="<%= customer?.address || '' %>">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Mobile number:</label>
+        <input type="text" name="phone" class="form-control" value="<%= customer?.phone || '' %>">
+      </div>
+
+      <!-- Save / Cancel -->
+      <div class="d-flex justify-content-between align-items-center mt-4">
+        <div class="d-flex gap-3">
+          <button type="submit" class="btn btn-success">Save</button>
+          <a href="/customer" class="btn btn-secondary">Cancel</a>
+        </div>
+      </div>
+    </form>
+  </div>
 </div>
 <%- include('footer') -%>

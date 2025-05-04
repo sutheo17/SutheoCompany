@@ -39,7 +39,7 @@
                             </a>
                             <div class="d-flex align-items-center" style="gap: 8px; flex-wrap: nowrap;">
                                 <% if (isSheet) { %>
-                                    <form method="POST" action="/transaction/add/<%= product._id %>" class="d-flex align-items-center" style="gap: 8px; flex-wrap: nowrap;">
+                                    <form method="POST" action="/transaction/save/<%= product._id %>" class="d-flex align-items-center" style="gap: 8px; flex-wrap: nowrap;">
                                         <select class="form-select mb-2" name="sizeIndex" id="sizeSelect-<%= product._id %>" style="min-width: 180px;" onchange="updateMaxQuantity('<%= product._id %>')" <%= outOfStock ? 'disabled' : '' %>>
                                             <% product.sizes.forEach((size, index) => { %>
                                                 <option value="<%= index %>"><%= size.height %> x <%= size.width %> (<%= size.quantity %>)</option>
@@ -81,7 +81,7 @@
                                         </script>
                                     </form>
                                 <% } else { %>
-                                    <form method="POST" action="/transaction/add/<%= product._id %>" class="d-flex align-items-center" style="gap: 8px; flex-wrap: nowrap;">
+                                    <form method="POST" action="/transaction/save/<%= product._id %>" class="d-flex align-items-center" style="gap: 8px; flex-wrap: nowrap;">
                                         <input type="number"
                                                name="quantity"
                                                class="form-control mb-2"

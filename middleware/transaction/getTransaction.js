@@ -5,14 +5,11 @@ module.exports = function (objectRepository) {
     const TransactionModel = requireOption(objectRepository, 'TransactionModel');
 
     return function (req, res, next) {
-        if(typeof res.locals.product === 'undefined'){
-            return next();
-        }
-        TransactionModel.find({_product: res.locals.product._id})
+        TransactionModel.findOne({_id:req.params.transactionid})
             .populate('_product')
-            .then((transactions) => {
-                console.log(transactions);
-            res.locals.transactions = transactions;
+            .then((transaction) =>
+        {
+            res.locals.transaction = transaction;
             return next();
         }).catch((err) => {return next(err)});
     };

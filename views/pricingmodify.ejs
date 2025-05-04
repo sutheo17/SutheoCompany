@@ -1,26 +1,26 @@
-<%- include('header', {pagetitle: 'PricingModfiy'}) -%>
+<%- include('header', {pagetitle: 'PricingModify'}) -%>
 <div class="container d-flex justify-content-center align-items-center mt-5">
-  <form class="w-100" style="max-width: 400px;">
+  <form class="w-100" style="max-width: 400px;" <form method="POST" action="/pricing/save/<%= product._id %>">
 
     <!-- Image + Name + Item Number -->
     <div class="d-flex mb-4 align-items-start">
-      <img src="https://placehold.co/200x150" alt="Product Image" class="me-3">
+      <img src="<%= product.image_path ? '/images/' + product.image_path : 'https://placehold.co/200x150' %>" alt="Product Image" class="me-3" style="max-width: 200px;">
       <div>
-        <p class="mb-1">Name: <span class="text-danger">string</span></p>
-        <p class="mb-1">Item number: <span class="text-danger">string</span></p>
+        <p class="mb-1">Name: <span class="text-danger"><%= product.name %></span></p>
+        <p class="mb-1">Item number: <span class="text-danger"><%= product.item_number %></span></p>
       </div>
     </div>
 
     <!-- Price input -->
     <div class="mb-4">
-      <label for="priceInput" class="form-label fw-bold fs-4">Price: <span class="text-primary">int</span></label>
-      <input type="number" id="priceInput" class="form-control" placeholder="Enter price">
+      <label for="priceInput" class="form-label fw-bold fs-4">Price:</label>
+      <input type="number" id="priceInput" name="price" class="form-control" placeholder="Enter price" value="<%= product.price %>">
     </div>
 
     <!-- Buttons -->
     <div class="d-flex justify-content-between">
       <button type="submit" class="btn btn-success btn-custom">Save</button>
-      <button type="button" class="btn btn-danger btn-custom" onclick="window.location.href='/'">Cancel</button>
+      <button type="button" class="btn btn-danger btn-custom" onclick="window.location.href='/pricing'">Cancel</button>
     </div>
 
   </form>
