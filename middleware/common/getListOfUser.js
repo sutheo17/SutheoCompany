@@ -6,7 +6,6 @@ module.exports = function (objectRepository) {
 
     return function (req, res, next) {
         UserModel.find({}).then((users) => {
-            console.log(users);
             res.locals.users = users;
             return next();
         }).catch((err) => {return next(err)

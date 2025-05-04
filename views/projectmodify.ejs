@@ -1,28 +1,62 @@
 <%- include('header', {pagetitle: 'ProjectModify'}) -%>
 <div class="container mt-5">
-  <form>
+  <% if (typeof error !== 'undefined') { %>
+    <div class="alert alert-danger"><%= error %></div>
+  <% } %>
 
+  <form method="POST" action="/project/save/<%= typeof project !== 'undefined' ? project._id : '' %>">
     <div class="form-section mb-4 row">
       <!-- Left Column -->
       <div class="col-md-6">
+        <!-- Name -->
         <div class="mb-3">
           <label for="nameInput" class="form-label">Name:</label>
-          <input type="text" class="form-control" id="nameInput" name="name">
+          <input
+                  type="text"
+                  class="form-control"
+                  id="nameInput"
+                  name="name"
+                  required
+                  value="<%= typeof project !== 'undefined' && project.name ? project.name : (user.name + ' project') %>">
         </div>
 
+        <!-- Date -->
         <div class="mb-3">
           <label class="form-label">Date:</label>
           <div class="d-flex gap-2">
-            <input type="date" class="form-control w-auto" name="dateFrom">
-            <input type="date" class="form-control w-auto" name="dateTo">
+            <input
+                    type="date"
+                    class="form-control w-auto"
+                    name="dateFrom"
+                    required
+                    value="<%= typeof project !== 'undefined' && project.dateFrom
+                            ? project.dateFrom.toISOString().split('T')[0]
+                            : new Date().toISOString().split('T')[0] %>">
+
+            <input
+                    type="date"
+                    class="form-control w-auto"
+                    name="dateTo"
+                    required
+                    value="<%= typeof project !== 'undefined' && project.dateTo
+                            ? project.dateTo.toISOString().split('T')[0]
+                            : '' %>">
           </div>
         </div>
 
+        <!-- Team -->
         <div class="mb-3">
           <label for="teamSelect" class="form-label">Team:</label>
-          <select class="form-select" id="teamSelect" name="team" multiple size="4">
-            <% users.forEach(user => { %>
-              <option value="<%= user.id %>"><%= user.name %></option>
+          <select class="form-select" id="teamSelect" name="team" multiple size="4" required>
+            <% users.forEach(userItem => { %>
+              <option
+                      value="<%= userItem.id %>"
+                      <%= (
+                              (typeof project !== 'undefined' && project.team?.includes(userItem.id)) ||
+                              (typeof project === 'undefined' && user.id === userItem.id)
+                      ) ? 'selected' : '' %>>
+                <%= userItem.name %>
+              </option>
             <% }) %>
           </select>
         </div>
@@ -30,20 +64,30 @@
 
       <!-- Right Column -->
       <div class="col-md-6">
+        <!-- Quote -->
         <div class="mb-3">
           <label for="quoteSelect" class="form-label">Quote:</label>
-          <select class="form-select" id="quoteSelect" name="quote">
+          <select class="form-select" id="quoteSelect" name="quote" required>
             <% quotes.forEach(quote => { %>
-              <option value="<%= quote.id %>"><%= quote.project_name %></option>
+              <option
+                      value="<%= quote.id %>"
+                      <%= typeof project !== 'undefined' && quote.id === project.quote?.toString() ? 'selected' : '' %>>
+                <%= quote.project_name %>
+              </option>
             <% }) %>
           </select>
         </div>
 
+        <!-- Customer -->
         <div class="mb-3">
           <label for="customerSelect" class="form-label">Customer:</label>
-          <select class="form-select w-auto" id="customerSelect" name="customer">
+          <select class="form-select w-auto" id="customerSelect" name="customer" required>
             <% customers.forEach(customer => { %>
-              <option value="<%= customer.id %>"><%= customer.name %></option>
+              <option
+                      value="<%= customer.id %>"
+                      <%= typeof project !== 'undefined' && customer.id === project.customer?.toString() ? 'selected' : '' %>>
+                <%= customer.name %>
+              </option>
             <% }) %>
           </select>
         </div>
@@ -55,7 +99,6 @@
       <button type="submit" class="btn btn-success btn-custom">Save</button>
       <a href="/project" class="btn btn-danger btn-custom">Cancel</a>
     </div>
-
   </form>
 </div>
 <%- include('footer') -%>
