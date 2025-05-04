@@ -2,12 +2,11 @@ const requireOption = require('../common/requireOption');
 
 module.exports = function (objectRepository) {
 
-    const UserModel = requireOption(objectRepository, 'UserModel');
+    const QuoteModel = requireOption(objectRepository, 'QuoteModel');
 
     return function (req, res, next) {
-        UserModel.find({}).then((users) => {
-            console.log(users);
-            res.locals.users = users;
+        QuoteModel.find({}).then((quotes) => {
+            res.locals.quotes = quotes;
             return next();
         }).catch((err) => {return next(err)
         });

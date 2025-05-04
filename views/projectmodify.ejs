@@ -2,52 +2,58 @@
 <div class="container mt-5">
   <form>
 
-    <div class="form-section mb-4">
-
+    <div class="form-section mb-4 row">
       <!-- Left Column -->
-      <div>
+      <div class="col-md-6">
         <div class="mb-3">
-          <label class="form-label">Name: <span class="text-primary">string</span></label>
+          <label for="nameInput" class="form-label">Name:</label>
+          <input type="text" class="form-control" id="nameInput" name="name">
         </div>
 
         <div class="mb-3">
-          <label for="dateInput" class="form-label">Date:</label>
-          <input type="date" class="form-control w-auto" id="dateInput">
+          <label class="form-label">Date:</label>
+          <div class="d-flex gap-2">
+            <input type="date" class="form-control w-auto" name="dateFrom">
+            <input type="date" class="form-control w-auto" name="dateTo">
+          </div>
         </div>
 
         <div class="mb-3">
           <label for="teamSelect" class="form-label">Team:</label>
-          <select class="form-select" id="teamSelect" multiple size="4">
-            <option>Employee 1</option>
-            <option>Employee 2</option>
-            <option>Employee 3</option>
+          <select class="form-select" id="teamSelect" name="team" multiple size="4">
+            <% users.forEach(user => { %>
+              <option value="<%= user.id %>"><%= user.name %></option>
+            <% }) %>
           </select>
         </div>
       </div>
 
       <!-- Right Column -->
-      <div>
+      <div class="col-md-6">
         <div class="mb-3">
-          <label for="fileUpload" class="form-label">Used items:</label><br>
-          <input class="form-control w-auto" type="file" id="fileUpload">
+          <label for="quoteSelect" class="form-label">Quote:</label>
+          <select class="form-select" id="quoteSelect" name="quote">
+            <% quotes.forEach(quote => { %>
+              <option value="<%= quote.id %>"><%= quote.project_name %></option>
+            <% }) %>
+          </select>
         </div>
 
         <div class="mb-3">
           <label for="customerSelect" class="form-label">Customer:</label>
-          <select class="form-select w-auto" id="customerSelect">
-            <option selected>Customers</option>
-            <option>Customer 1</option>
-            <option>Customer 2</option>
+          <select class="form-select w-auto" id="customerSelect" name="customer">
+            <% customers.forEach(customer => { %>
+              <option value="<%= customer.id %>"><%= customer.name %></option>
+            <% }) %>
           </select>
         </div>
       </div>
-
     </div>
 
     <!-- Buttons -->
     <div class="d-flex justify-content-center gap-3">
-      <a href="/" class="btn btn-success btn-custom">Save</a>
-      <a href="/" class="btn btn-danger btn-custom">Cancel</a>
+      <button type="submit" class="btn btn-success btn-custom">Save</button>
+      <a href="/project" class="btn btn-danger btn-custom">Cancel</a>
     </div>
 
   </form>

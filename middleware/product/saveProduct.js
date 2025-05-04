@@ -30,7 +30,12 @@ module.exports = function (objectRepository) {
         product.category = req.body.category;
         product.manufacturer = req.body.manufacturer;
         product.supplier = req.body.supplier;
-        product.price = req.body.price || 0;
+        if (typeof req.body.price !== 'undefined' && req.body.price !== '') {
+            product.price = parseFloat(req.body.price);
+        } else if (!product._id) {
+            // új termék esetén default 0
+            product.price = 0;
+        }
 
         // Diszkrét vs Sheet mezők
         if (req.body.category === 'Discrete') {
@@ -48,7 +53,7 @@ module.exports = function (objectRepository) {
             // Méretek feldolgozása
             if (req.body.sizes) {
                 const sizeStrings = req.body.sizes
-                    .split(',')
+                    .split(';')
                     .map(s => s.trim())
                     .filter(s => s.length > 0);
 

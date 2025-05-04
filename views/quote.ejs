@@ -1,60 +1,311 @@
-<%- include('header', {pagetitle: 'Qoute'}) -%>
+<%- include('header', { pagetitle: 'Quote' }) -%>
 <div class="container mt-3">
 
-  <!-- Product 1 -->
-  <div class="d-flex mb-4">
-    <img src="https://placehold.co/200x150" alt="Product Image" class="me-3">
-    <div>
-      <p class="mb-1">Name: <span class="text-danger">string</span></p>
-      <p class="mb-1">Item number: <span class="text-danger">string</span></p>
-      <p class="mb-1">Pieces: <span class="text-danger">int</span></p>
-      <p class="mb-1">Price: <span class="text-danger">int</span></p>
+  <div class="row mb-4">
+    <div class="col-md-6">
+      <label for="projectName" class="form-label">Project name:</label>
+      <input id="projectName" name="project_name" class="form-control" required>
+    </div>
+    <div class="col-md-6">
+      <label for="quoteSelect" class="form-label">Load existing:</label>
+      <div class="input-group">
+        <select id="quoteSelect" class="form-select" <%= quotes.length === 0 ? 'disabled' : '' %>>
+          <option selected disabled>Choose...</option>
+          <% quotes.forEach(quote => { %>
+            <option value="<%= quote.project_name %>" data-id="<%= quote._id %>">
+              <%= quote.project_name %>
+            </option>
+          <% }) %>
+        </select>
+        <button id="loadQuoteBtn" class="btn btn-secondary" type="button" <%= quotes.length === 0 ? 'disabled' : '' %>>
+          Load
+        </button>
+      </div>
     </div>
   </div>
 
-  <!-- Product 2 -->
-  <div class="d-flex mb-4">
-    <img src="https://placehold.co/200x150" alt="Product Image" class="me-3">
-    <div>
-      <p class="mb-1">Name: <span class="text-danger">string</span></p>
-      <p class="mb-1">Item number: <span class="text-danger">string</span></p>
-      <p class="mb-1">Pieces: <span class="text-danger">int</span></p>
-      <p class="mb-1">Price: <span class="text-danger">int</span></p>
-    </div>
-  </div>
+  <!-- Dinamikusan hozzáadott termékek -->
+  <div id="product-list" class="mb-4"></div>
 
   <!-- Select Items -->
   <div class="mb-3">
-    <label class="form-label">Item number:</label>
-    <select class="form-select w-auto d-inline">
-      <option selected>items</option>
-      <option>Item 1</option>
-      <option>Item 2</option>
+    <label class="form-label" for="itemSelect">Item number:</label>
+    <select id="itemSelect" class="form-select w-auto d-inline">
+      <option selected disabled>Select item</option>
+      <% products.forEach(product => { %>
+        <option value="<%= product.item_number %>"><%= product.item_number %></option>
+      <% }) %>
     </select>
   </div>
 
+  <!-- Darabszám beírása -->
   <div class="mb-3">
-    <label class="form-label">Pieces:</label>
-    <select class="form-select w-auto d-inline">
-      <option selected>pieces</option>
-      <option>1</option>
-      <option>2</option>
-    </select>
+    <label class="form-label" for="piecesInput">Pieces:</label>
+    <input id="piecesInput" type="number" min="1" value="1" class="form-control w-auto d-inline">
   </div>
 
+  <!-- Add gomb -->
   <div class="mb-4">
-    <button class="btn btn-primary">Add</button>
+    <button id="addButton" class="btn btn-primary">Add</button>
   </div>
 
-  <!-- Calculated price -->
+  <!-- Profit margin -->
   <div class="mb-4">
-    <h4>Calculated price: <span class="text-danger">int</span></h4>
+    <label for="profitInput" class="form-label">Profit margin (%):</label>
+    <input type="number" id="profitInput" class="form-control w-auto d-inline" min="0" value="15" step="1">
   </div>
 
-  <!-- Save Button -->
-  <div class="d-flex justify-content-center">
-    <a href="/" class="btn btn-success btn-custom">Save</a>
+  <!-- Ár eredmények -->
+  <div class="mb-4">
+    <p class="mb-1">Calculated price: <span id="totalPrice" class="text-danger">0</span> HUF</p>
+    <p class="mb-1">Profit amount: <span id="profitAmount" class="text-primary">0</span> HUF</p>
+    <p class="mb-1 fw-bold">Final quote price: <span id="finalPrice" class="text-success">0</span> HUF</p>
   </div>
+
+  <!-- Mentés -->
+  <form id="quoteForm" method="POST" action="/quote/save/">
+    <input type="hidden" name="items" id="quoteItems">
+    <input type="hidden" name="project_name" id="projectNameHidden">
+    <div class="d-flex justify-content-center">
+      <button type="submit" class="btn btn-success btn-custom" id="saveButton" disabled>Save</button>
+    </div>
+  </form>
 
 </div>
+
+<script>
+  const products = <%- JSON.stringify(products) %>;
+  const profitInput = document.getElementById('profitInput');
+  const profitAmountSpan = document.getElementById('profitAmount');
+  const finalPriceSpan = document.getElementById('finalPrice');
+  const productList = document.getElementById('product-list');
+  const itemSelect = document.getElementById('itemSelect');
+  const piecesInput = document.getElementById('piecesInput');
+  const addButton = document.getElementById('addButton');
+  const totalPriceSpan = document.getElementById('totalPrice');
+
+  const saveBtn = document.getElementById('saveButton');
+  const projectInput = document.getElementById('projectName');
+  const hiddenProjectInput = document.getElementById('projectNameHidden');
+  const quoteSelect = document.getElementById('quoteSelect');
+  const loadBtn = document.getElementById('loadQuoteBtn');
+
+  let total = 0;
+  const addedItems = {}; // item_number -> { pieces, element, product }
+
+  function updateTotal() {
+    total = Object.values(addedItems).reduce((sum, item) => {
+      return sum + (item.product.price * item.pieces);
+    }, 0);
+    totalPriceSpan.textContent = total.toFixed(2);
+  }
+
+  function updateSaveButtonState() {
+    saveBtn.disabled = !(projectInput.value.trim() && Object.keys(addedItems).length > 0);
+  }
+
+  function updateTotal() {
+    total = Object.values(addedItems).reduce((sum, item) => {
+      return sum + (item.product.price * item.pieces);
+    }, 0);
+
+    const profitPercent = parseFloat(profitInput.value) || 0;
+    const profitAmount = total * (profitPercent / 100);
+    const final = total + profitAmount;
+
+    totalPriceSpan.textContent = total.toFixed(2);
+    profitAmountSpan.textContent = profitAmount.toFixed(2);
+    finalPriceSpan.textContent = final.toFixed(2);
+  }
+
+  profitInput.addEventListener('input', updateTotal);
+
+  projectInput.addEventListener('input', updateSaveButtonState);
+
+  function updateUI(item_number) {
+    const item = addedItems[item_number];
+    const { product, pieces } = item;
+    const price = product.price;
+    const sum = price * pieces;
+
+    item.element.querySelector('.piece-count').textContent = pieces;
+    item.element.querySelector('.unit-price').textContent = price.toFixed(2);
+    item.element.querySelector('.sum-price').textContent = sum.toFixed(2);
+  }
+
+  function removeItem(item_number) {
+    const item = addedItems[item_number];
+    if (item) {
+      item.element.remove();
+      delete addedItems[item_number];
+      updateTotal();
+      updateSaveButtonState();
+    }
+  }
+
+  addButton.addEventListener('click', () => {
+    const selectedNumber = itemSelect.value;
+    const pieces = parseInt(piecesInput.value);
+
+    if (!selectedNumber || isNaN(pieces) || pieces < 1) return;
+
+    const product = products.find(p => p.item_number === selectedNumber);
+
+    if (addedItems[selectedNumber]) {
+      addedItems[selectedNumber].pieces += pieces;
+      updateUI(selectedNumber);
+    } else {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'd-flex mb-4 align-items-start';
+      wrapper.innerHTML = `
+        <img src="/images/${product.image_path}" alt="Product Image" class="me-3" style="width:250px;height:250px;">
+        <div>
+          <p class="mb-1">Name: <span class="text-danger">${product.name}</span></p>
+          <p class="mb-1">Item number: <span class="text-danger">${product.item_number}</span></p>
+          <p class="mb-1">Price per unit: <span class="text-danger unit-price">${product.price.toFixed(2)}</span></p>
+          <p class="mb-1">Pieces:
+            <button class="btn btn-sm btn-outline-secondary decrement">-</button>
+            <span class="mx-2 piece-count">${pieces}</span>
+            <button class="btn btn-sm btn-outline-secondary increment">+</button>
+            pcs
+          </p>
+          <p class="mb-1">Sum: <span class="text-danger sum-price">${(product.price * pieces).toFixed(2)}</span></p>
+          <button class="btn btn-sm btn-danger remove">Remove</button>
+        </div>
+      `;
+
+      productList.appendChild(wrapper);
+
+      addedItems[selectedNumber] = {
+        pieces,
+        product,
+        element: wrapper
+      };
+
+      // gombokhoz események
+      wrapper.querySelector('.increment').addEventListener('click', () => {
+        addedItems[selectedNumber].pieces++;
+        updateUI(selectedNumber);
+        updateTotal();
+        updateSaveButtonState();
+      });
+
+      wrapper.querySelector('.decrement').addEventListener('click', () => {
+        if (addedItems[selectedNumber].pieces > 1) {
+          addedItems[selectedNumber].pieces--;
+          updateUI(selectedNumber);
+          updateTotal();
+          updateSaveButtonState();
+        }
+      });
+
+      wrapper.querySelector('.remove').addEventListener('click', () => {
+        removeItem(selectedNumber);
+      });
+    }
+
+    updateTotal();
+    updateSaveButtonState();
+  });
+
+  // Save gomb submit handler
+  document.getElementById('quoteForm').addEventListener('submit', function (e) {
+    const itemsToSend = Object.values(addedItems).map(item => ({
+      item_number: item.product.item_number,
+      name: item.product.name,
+      price: item.product.price,
+      quantity: item.pieces
+    }));
+
+    console.log('✅ Project input:', projectInput.value);
+
+    document.getElementById('quoteItems').value = JSON.stringify(itemsToSend);
+    hiddenProjectInput.value = projectInput.value.trim();
+  });
+
+  loadBtn.addEventListener('click', () => {
+    const selectedOption = quoteSelect.selectedOptions[0];
+    if (!selectedOption) return;
+
+    const selectedName = selectedOption.value;
+    const quoteId = selectedOption.dataset.id;
+
+    fetch(`/quote/load/${encodeURIComponent(quoteId)}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ project_name: selectedName })
+    })
+            .then(res => res.json())
+            .then(data => {
+              if (!data || !Array.isArray(data.items)) return;
+
+              productList.innerHTML = '';
+              Object.keys(addedItems).forEach(k => delete addedItems[k]);
+              projectInput.value = data.project_name;
+
+              data.items.forEach(q => {
+                const product = products.find(p => p.item_number === q.item_number);
+                if (product) {
+                  const selectedNumber = product.item_number;
+                  const pieces = q.quantity;
+
+                  const wrapper = document.createElement('div');
+                  wrapper.className = 'd-flex mb-4 align-items-start';
+                  wrapper.innerHTML = `
+          <img src="/images/${product.image_path}" alt="Product Image" class="me-3" style="width:250px;height:250px;">
+          <div>
+            <p class="mb-1">Name: <span class="text-danger">${product.name}</span></p>
+            <p class="mb-1">Item number: <span class="text-danger">${product.item_number}</span></p>
+            <p class="mb-1">Price per unit: <span class="text-danger unit-price">${product.price.toFixed(2)}</span></p>
+            <p class="mb-1">Pieces:
+              <button class="btn btn-sm btn-outline-secondary decrement">-</button>
+              <span class="mx-2 piece-count">${pieces}</span>
+              <button class="btn btn-sm btn-outline-secondary increment">+</button>
+              pcs
+            </p>
+            <p class="mb-1">Sum: <span class="text-danger sum-price">${(product.price * pieces).toFixed(2)}</span></p>
+            <button class="btn btn-sm btn-danger remove">Remove</button>
+          </div>
+        `;
+
+                  productList.appendChild(wrapper);
+
+                  addedItems[selectedNumber] = {
+                    pieces,
+                    product,
+                    element: wrapper
+                  };
+
+                  wrapper.querySelector('.increment').addEventListener('click', () => {
+                    addedItems[selectedNumber].pieces++;
+                    updateUI(selectedNumber);
+                    updateTotal();
+                    updateSaveButtonState();
+                  });
+
+                  wrapper.querySelector('.decrement').addEventListener('click', () => {
+                    if (addedItems[selectedNumber].pieces > 1) {
+                      addedItems[selectedNumber].pieces--;
+                      updateUI(selectedNumber);
+                      updateTotal();
+                      updateSaveButtonState();
+                    }
+                  });
+
+                  wrapper.querySelector('.remove').addEventListener('click', () => {
+                    removeItem(selectedNumber);
+                  });
+                }
+              });
+
+              updateTotal();
+              updateSaveButtonState();
+
+              quoteForm.action = `/quote/save/${quoteId}`;
+            });
+  });
+</script>
+
 <%- include('footer') -%>

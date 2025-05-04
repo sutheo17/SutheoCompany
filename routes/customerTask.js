@@ -3,7 +3,7 @@ const checkAuthMW = require("../middleware/auth/checkAuth");
 const getListOfCustomerMW =  require('../middleware/customer/getListOfCustomer');
 const getCustomerMW =  require('../middleware/customer/getCustomer');
 const saveCustomerMW =  require('../middleware/customer/saveCustomer');
-const CustomerModel = require('../models/Customer');
+const CustomerModel = require('../models/customer');
 const deleteCustomerMW = require("../middleware/customer/deleteCustomer");
 
 module.exports = function (app) {

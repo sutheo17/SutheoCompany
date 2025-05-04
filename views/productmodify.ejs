@@ -79,7 +79,7 @@
               <div class="row" id="sheetFields" style="display: none;">
                 <div class="col-md-6">
                   Size(s) (mm):
-                  <input type="text" name="sizes" class="form-control text-danger" placeholder="[height]x[width]x[pieces] format"  value="<% if (typeof product !== 'undefined' && product.sizes) { %><%= product.sizes.map(s => s.height + 'x' + s.width + 'x' + s.quantity).join(',') %><% } %>">
+                  <input type="text" name="sizes" class="form-control text-danger" placeholder="[height]x[width]x[pieces] format"  value="<% if (typeof product !== 'undefined' && product.sizes) { %><%= product.sizes.map(s => s.height + 'x' + s.width + 'x' + s.quantity).join(';') %><% } %>">
                 </div>
                 <div class="col-md-6">
                   Thickness (mm):

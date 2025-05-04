@@ -18,7 +18,7 @@
       <table class="table table-custom-product">
         <tr>
           <td class="col-3 align-middle" rowspan="6">
-            <img src="<%= product.image_path ? '/images/' + product.image_path : 'https://placehold.co/310x250' %>" class="img-fluid" alt="Item Image">
+            <img src="<%= product.image_path ? '/images/' + product.image_path : 'https://placehold.co/310x250' %>" style="width: 310px; height: 250px; object-fit: contain;" alt="Item Image">
           </td>
           <td class="col-6">Name: <span class="text-danger"><%= product.name %></span></td>
         </tr>
