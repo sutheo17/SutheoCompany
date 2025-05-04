@@ -39,28 +39,61 @@
                             </a>
                             <div class="d-flex align-items-center" style="gap: 8px; flex-wrap: nowrap;">
                                 <% if (isSheet) { %>
-                                    <select class="form-select mb-2" style="min-width: 120px;" <%= outOfStock ? 'disabled' : '' %>>
-                                        <% product.sizes.forEach(size => { %>
-                                            <option><%= size.height %> x <%= size.width %></option>
-                                        <% }) %>
-                                    </select>
-                                    <select class="form-select mb-2" style="min-width: 100px;" <%= outOfStock ? 'disabled' : '' %>>
-                                        <% product.sizes.forEach(size => { %>
-                                            <option><%= size.quantity %> pcs</option>
-                                        <% }) %>
-                                    </select>
-                                    <button class="btn btn-dark mb-2" style="white-space: nowrap; min-width: 100px;" <%= outOfStock ? 'disabled' : '' %>>
-                                        Take out
-                                    </button>
-                                <% } else { %>
+                                    <form method="POST" action="/transaction/add/<%= product._id %>" class="d-flex align-items-center" style="gap: 8px; flex-wrap: nowrap;">
+                                        <select class="form-select mb-2" name="sizeIndex" id="sizeSelect-<%= product._id %>" style="min-width: 180px;" onchange="updateMaxQuantity('<%= product._id %>')" <%= outOfStock ? 'disabled' : '' %>>
+                                            <% product.sizes.forEach((size, index) => { %>
+                                                <option value="<%= index %>"><%= size.height %> x <%= size.width %> (<%= size.quantity %>)</option>
+                                            <% }) %>
+                                        </select>
+
                                         <input type="number"
-                                               class="form-control"
+                                               name="quantity"
+                                               id="quantityInput-<%= product._id %>"
+                                               class="form-control mb-2"
+                                               style="max-width: 100px;"
+                                               min="1"
+                                               value="1"
+                                                <%= outOfStock ? 'disabled' : '' %> >
+
+                                        <button type="submit" class="btn btn-dark mb-2" style="min-width: 100px;" <%= outOfStock ? 'disabled' : '' %>>
+                                            Take out
+                                        </button>
+
+                                        <script>
+                                            const sizes_<%= product._id %> = <%- JSON.stringify(product.sizes) %>;
+
+                                            function updateMaxQuantity(productId) {
+                                                const select = document.getElementById('sizeSelect-' + productId);
+                                                const input = document.getElementById('quantityInput-' + productId);
+                                                const selectedIndex = select.value;
+                                                const selectedSize = sizes_<%= product._id %>[selectedIndex];
+
+                                                if (selectedSize && selectedSize.quantity > 0) {
+                                                    input.max = selectedSize.quantity;
+                                                    if (parseInt(input.value) > selectedSize.quantity) {
+                                                        input.value = selectedSize.quantity;
+                                                    }
+                                                }
+                                            }
+
+                                            // init on page load
+                                            updateMaxQuantity('<%= product._id %>');
+                                        </script>
+                                    </form>
+                                <% } else { %>
+                                    <form method="POST" action="/transaction/add/<%= product._id %>" class="d-flex align-items-center" style="gap: 8px; flex-wrap: nowrap;">
+                                        <input type="number"
+                                               name="quantity"
+                                               class="form-control mb-2"
                                                style="max-width: 150px;"
                                                min="1"
                                                max="<%= product.in_stock %>"
                                                value="1"
                                                 <%= outOfStock ? 'disabled' : '' %>>
-                                    <button class="btn btn-dark" <%= outOfStock ? 'disabled' : '' %>>Take out</button>
+                                        <button type="submit" class="btn btn-dark mb-2" style="min-width: 100px;" <%= outOfStock ? 'disabled' : '' %>>
+                                            Take out
+                                        </button>
+                                    </form>
                                 <% } %>
                             </div>
                         </div>

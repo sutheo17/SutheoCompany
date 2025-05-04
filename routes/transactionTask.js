@@ -1,17 +1,27 @@
 const renderMW =  require('../middleware/common/render.js')
 const checkAuthMW = require("../middleware/auth/checkAuth");
+const saveTransactionMW =  require('../middleware/transaction/saveTransaction.js')
+const getListOfTransactionMW =  require('../middleware/transaction/getListOfTransaction.js')
+const ProductModel = require("../models/product");
+const TransactionModel = require("../models/transaction");const getProductMW = require("../middleware/product/getProduct");
 
 module.exports = function (app) {
-    const objectRepository = {};
+    const objectRepository = {
+        ProductModel: ProductModel,
+        TransactionModel: TransactionModel
+    };
 
-    app.get('/transaction/product',
+    app.post('/transaction/add/:productid',
         checkAuthMW(false),
-        renderMW(objectRepository, 'transaction')
+        getProductMW(objectRepository),
+        saveTransactionMW(objectRepository)
     );
 
-    app.get('/transaction/product/add',
-        checkAuthMW(true),
-        renderMW(objectRepository, 'transactionmodify')
+    app.get('/transaction/:productid',
+        checkAuthMW(false),
+        getProductMW(objectRepository),
+        getListOfTransactionMW(objectRepository),
+        renderMW(objectRepository, 'transaction')
     );
 
     app.get('/transaction/product/modify',

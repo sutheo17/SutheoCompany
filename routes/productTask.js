@@ -2,6 +2,7 @@ const renderMW =  require('../middleware/common/render.js')
 const checkAuthMW = require("../middleware/auth/checkAuth");
 const saveProductMW = require('../middleware/product/saveProduct');
 const getProductMW = require('../middleware/product/getProduct');
+const deleteProductMW = require('../middleware/product/deleteProduct');
 
 const ProductModel = require('../models/product');
 
@@ -42,25 +43,32 @@ module.exports = function (app) {
         renderMW(objectRepository, 'pricingmodify')
     );
 
+    app.post('/product/save/:productid?',
+        checkAuthMW(true),
+        getProductMW(objectRepository),
+        upload.single('photo'),
+        saveProductMW(objectRepository)
+    );
+
     app.get('/product/add',
         checkAuthMW(true),
         renderMW(objectRepository, 'productmodify')
+    );
+
+    app.get('/product/modify/:productid',
+        checkAuthMW(true),
+        getProductMW(objectRepository),
+        renderMW(objectRepository, 'productmodify')
+    );
+
+    app.post('/product/delete/:productid',
+        checkAuthMW(true),
+        deleteProductMW(objectRepository)
     );
 
     app.get('/product/:productid',
         checkAuthMW(false),
         getProductMW(objectRepository),
         renderMW(objectRepository, 'product')
-    );
-
-    app.post('/product/add',
-        checkAuthMW(true),
-        upload.single('photo'),
-        saveProductMW(objectRepository)
-    );
-
-    app.get('/product/modify',
-        checkAuthMW(true),
-        renderMW(objectRepository, 'productmodify')
     );
 };

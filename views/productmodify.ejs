@@ -1,25 +1,26 @@
 <%- include('header', {pagetitle: 'ProductModify'}) -%>
 <div class="container mt-4">
-  <form method="POST" action="/product/add" enctype="multipart/form-data">
+  <form method="POST" action="/product/save<%= product && product._id ? '/' + product._id : '' %>" enctype="multipart/form-data">
     <div class="row mt-4">
       <div class="col-md-12">
         <table class="table table-custom-product-modify">
           <tr>
             <td class="col-3 align-middle text-center" rowspan="6">
-              <img src="https://placehold.co/310x250" class="img-fluid mb-2" alt="Item Image">
+              <img src="<% if (typeof product !== 'undefined' && product.image_path) { %>/images/<%= product.image_path %><% } else { %>https://placehold.co/310x250<% } %>" class="img-fluid mb-2" alt="Item Image">
               <div>
                 <input type="file" name="photo" class="form-control mb-2">
               </div>
             </td>
             <td class="col-6">
               Name:
-              <input type="text" name="name" class="form-control text-danger" placeholder="Name" required>
+              <input type="text" name="name" class="form-control text-danger" placeholder="Name" required
+                     value="<% if (typeof product !== 'undefined') { %><%= product.name %><% } else { %><% } %>">
             </td>
           </tr>
           <tr>
             <td class="col-6">
               Item number:
-              <input type="text" name="item_number" class="form-control text-danger" placeholder="Item number" required>
+              <input type="text" name="item_number" class="form-control text-danger" placeholder="Item number"  value="<% if (typeof product !== 'undefined') { %><%= product.item_number %><% } %>" required>
             </td>
           </tr>
           <tr>
@@ -27,17 +28,24 @@
               <div class="row">
                 <div class="col-md-6">
                   Category:
-                  <select name="category" id="categorySelect" class="form-control text-danger" required>
-                    <option value="">-- Select --</option>
-                    <option value="Discrete">Discrete</option>
-                    <option value="Sheet">Sheet</option>
-                  </select>
+                  <% if (typeof product === 'undefined') { %>
+                    <!-- ÚJ TERMÉK: kategória választható -->
+                    <select name="category" id="categorySelect" class="form-control text-danger" required>
+                      <option value="">-- Select --</option>
+                      <option value="Discrete">Discrete</option>
+                      <option value="Sheet">Sheet</option>
+                    </select>
+                  <% } else { %>
+                    <!-- MÓDOSÍTÁS: kategória fix szövegként, de elküldve rejtve -->
+                    <input type="hidden" name="category" value="<%= product.category %>">
+                    <input type="text" class="form-control text-danger" value="<%= product.category %>" readonly>
+                  <% } %>
                 </div>
 
                 <!-- Sub-category OR Color -->
                 <div class="col-md-6" id="subColorGroup" style="display: none;">
                   <label id="subColorLabel">Sub-category:</label>
-                  <input type="text" name="subcategory" class="form-control text-danger" id="subColorInput" placeholder="">
+                  <input type="text" name="subcategory" class="form-control text-danger" id="subColorInput" placeholder="" value="<% if (typeof product !== 'undefined') { %><%= product.color || product.subcategory || '' %><% } %>">
                 </div>
               </div>
             </td>
@@ -49,11 +57,11 @@
               <div class="row">
                 <div class="col-md-6">
                   Manufacturer:
-                  <input type="text" name="manufacturer" class="form-control text-danger" placeholder="Manufacturer">
+                  <input type="text" name="manufacturer" class="form-control text-danger" placeholder="Manufacturer"  value="<% if (typeof product !== 'undefined') { %><%= product.manufacturer %><% } %>">
                 </div>
                 <div class="col-md-6">
                   Supplier:
-                  <input type="text" name="supplier" class="form-control text-danger" placeholder="Supplier">
+                  <input type="text" name="supplier" class="form-control text-danger" placeholder="Supplier"  value="<% if (typeof product !== 'undefined') { %><%= product.supplier %><% } %>">
                 </div>
               </div>
             </td>
@@ -65,17 +73,17 @@
               <div class="row" id="discreteFields" style="display: none;">
                 <div class="col-md-12">
                   In stock:
-                  <input type="number" name="in_stock" class="form-control text-danger" value="0" min="0">
+                  <input type="number" name="in_stock" class="form-control text-danger" value="<% if (typeof product !== 'undefined') { %><%= product.in_stock %><% } else { %>0<% } %>" min="0">
                 </div>
               </div>
               <div class="row" id="sheetFields" style="display: none;">
                 <div class="col-md-6">
                   Size(s) (mm):
-                  <input type="text" name="sizes" class="form-control text-danger" placeholder="[height]x[width]x[pieces] format">
+                  <input type="text" name="sizes" class="form-control text-danger" placeholder="[height]x[width]x[pieces] format"  value="<% if (typeof product !== 'undefined' && product.sizes) { %><%= product.sizes.map(s => s.height + 'x' + s.width + 'x' + s.quantity).join(',') %><% } %>">
                 </div>
                 <div class="col-md-6">
                   Thickness (mm):
-                  <input type="number" name="thickness" class="form-control text-danger" placeholder="Thickness in mm" min="0" step="0.01">
+                  <input type="number" name="thickness" class="form-control text-danger" placeholder="Thickness in mm" min="0" step="0.01"  value="<% if (typeof product !== 'undefined') { %><%= product.thickness %><% } %>">
                 </div>
               </div>
             </td>
@@ -84,9 +92,10 @@
           <tr>
             <td colspan="2">
               <button type="submit" class="btn btn-success">Save</button>
-              <a href="/transaction/product" class="btn btn-secondary">Cancel</a>
+              <a class="btn btn-secondary" href="<%= (typeof product !== 'undefined' && product._id) ? '/product/' + product._id : '/' %>">Cancel</a>
             </td>
           </tr>
+
         </table>
       </div>
     </div>
@@ -104,8 +113,10 @@
     const discreteFields = document.getElementById('discreteFields');
     const sheetFields = document.getElementById('sheetFields');
 
-    function toggleFields() {
-      const value = categorySelect.value;
+    const serverCategory = "<%= typeof product !== 'undefined' ? product.category : '' %>";
+
+    function toggleFields(categoryOverride = null) {
+      const value = categoryOverride || (categorySelect ? categorySelect.value : '');
 
       const show = value !== '';
       subColorGroup.style.display = show ? '' : 'none';
@@ -133,8 +144,13 @@
       }
     }
 
-    categorySelect.addEventListener('change', toggleFields);
-    toggleFields(); // page load init
+    // Init mezők megjelenítése szerveroldali kategória alapján
+    toggleFields(serverCategory);
+
+    // Új termék esetén reagál a kiválasztásra is
+    if (categorySelect) {
+      categorySelect.addEventListener('change', () => toggleFields());
+    }
   });
 </script>
 <%- include('footer') -%>

@@ -55,10 +55,20 @@
         </tr>
         <tr>
           <td class="col-6" colspan="2">
-            <a href="/transaction/product/<%= product._id %>" class="btn btn-success">View transactions</a>
+            <a href="/transaction/<%= product._id %>" class="btn btn-success">View transactions</a>
           </td>
         </tr>
       </table>
+      <% if (user.leader === true) { %>
+        <tr>
+          <td class="col-6 text-end" colspan="2">
+            <form method="POST" action="/product/delete/<%= product._id %>" class="text-end" onsubmit="return confirm('Are you sure you want to delete this product?');">
+              <input type="hidden" name="product_id" value="<%= product._id %>">
+              <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+          </td>
+        </tr>
+      <% } %>
     </div>
   </div>
 </div>

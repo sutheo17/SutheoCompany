@@ -1,8 +1,8 @@
 const requireOption = require('../common/requireOption');
 
-module.exports = function (objectrepository) {
+module.exports = function (objectRepository) {
 
-    const ProductModel = requireOption(objectrepository, 'ProductModel');
+    const ProductModel = requireOption(objectRepository, 'ProductModel');
 
     return function (req, res, next) {
         ProductModel.find({}).then((products) => {
