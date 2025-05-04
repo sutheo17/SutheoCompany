@@ -47,7 +47,7 @@ module.exports = function (app) {
 
     app.get('/project',
         checkAuthMW(),
-        getListOfProjectsMW(objectRepository),
+        getListOfProjectsMW(objectRepository, true),
         renderMW(objectRepository, 'project')
     );
 

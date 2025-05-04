@@ -23,7 +23,10 @@ module.exports = function (objectRepository, onlyForLeaders) {
         }
 
         ProjectModel.find(query)
+            .populate('team')
+            .populate('customer')
             .then((projects) => {
+                console.log(projects);
                 res.locals.projects = projects;
                 return next();
             })

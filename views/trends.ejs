@@ -6,19 +6,16 @@
 
 <script>
   const ctx = document.getElementById('projectsPieChart').getContext('2d');
-  const projectsPieChart = new Chart(ctx, {
+  const labels = <%- JSON.stringify(countyChartData.labels) %>;
+  const data = <%- JSON.stringify(countyChartData.data) %>;
+
+  new Chart(ctx, {
     type: 'pie',
     data: {
-      labels: ['New York', 'Los Angeles', 'Chicago', 'Houston', 'Phoenix'],
+      labels: labels,
       datasets: [{
-        label: 'Projects by City',
-        data: [
-          Math.floor(Math.random() * 100) + 1,
-          Math.floor(Math.random() * 100) + 1,
-          Math.floor(Math.random() * 100) + 1,
-          Math.floor(Math.random() * 100) + 1,
-          Math.floor(Math.random() * 100) + 1
-        ],
+        label: 'Projektek megyénként',
+        data: data,
         borderWidth: 1
       }]
     },
@@ -27,7 +24,7 @@
       plugins: {
         title: {
           display: true,
-          text: 'Projects by City',
+          text: 'Projektek megyénként',
           font: {
             size: 24
           }
