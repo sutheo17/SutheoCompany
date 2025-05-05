@@ -1,3 +1,7 @@
+/*
+    Get the list of customers (res.locals.customers)
+ */
+
 const requireOption = require('../common/requireOption');
 
 module.exports = function (objectRepository) {

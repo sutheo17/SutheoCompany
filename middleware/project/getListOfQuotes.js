@@ -1,3 +1,7 @@
+/*
+    Get the list of quotes (res.locals.quotes)
+ */
+
 const requireOption = require('../common/requireOption');
 
 module.exports = function (objectRepository) {

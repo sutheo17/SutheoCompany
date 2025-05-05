@@ -1,3 +1,7 @@
+/*
+    Delete a customer from the database
+ */
+
 const requireOption = require('../common/requireOption');
 
 module.exports = function (objectRepository) {
@@ -5,7 +9,7 @@ module.exports = function (objectRepository) {
 
     return function (req, res, next) {
         if (typeof req.params.customerid === 'undefined') {
-            return next('Product ID is missing');
+            return next('Customer ID is missing');
         }
 
         CustomerModel.deleteOne({ _id: req.params.customerid })

@@ -11,12 +11,14 @@ module.exports = function (app) {
         CustomerModel: CustomerModel
     };
 
+    // Customer
     app.get('/customer',
         checkAuthMW(true),
         getListOfCustomerMW(objectRepository),
         renderMW(objectRepository, 'customer')
     );
 
+    // Add a new customer
     app.get('/customer/add',
         checkAuthMW(true),
         (req, res, next) => {
@@ -26,17 +28,20 @@ module.exports = function (app) {
         renderMW(objectRepository, 'customermodify')
     );
 
+    // Delete a customer
     app.post('/customer/delete/:customerid',
         checkAuthMW(true),
         deleteCustomerMW(objectRepository)
     );
 
+    // Modify an existing customer
     app.get('/customer/modify/:customerid',
         checkAuthMW(true),
         getCustomerMW(objectRepository),
         renderMW(objectRepository, 'customermodify')
     );
 
+    // Save a new customer or update an existing one
     app.post('/customer/save/:customerid?',
         checkAuthMW(true),
         getCustomerMW(objectRepository),

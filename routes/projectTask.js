@@ -4,7 +4,7 @@ const getListOfProductMW = require('../middleware/product/getListOfProduct');
 const getListOfQuotesMW = require('../middleware/project/getListOfQuotes');
 const getListOfProjectsMW = require('../middleware/project/getListOfProjects');
 const getListOfUserMW = require('../middleware/common/getListOfUser');
-const getQouteMW = require('../middleware/project/getQuote');
+const getQuoteMW = require('../middleware/project/getQuote');
 const getProjectMW = require('../middleware/project/getProject');
 const saveQuoteMW = require('../middleware/project/saveQuote');
 const getListOfCustomerMW = require('../middleware/customer/getListOfCustomer');
@@ -24,6 +24,7 @@ module.exports = function (app) {
         ProjectModel: ProjectModel
     };
 
+    // Quote
     app.get('/quote',
         checkAuthMW(true),
         getListOfProductMW(objectRepository),
@@ -31,26 +32,34 @@ module.exports = function (app) {
         renderMW(objectRepository, 'quote')
     );
 
+    // Save a new quote or update an existing one
     app.post('/quote/save/:quoteid?',
         checkAuthMW(true),
         saveQuoteMW(objectRepository)
     );
 
+    // Load a quote from the database
+    // A JSON gets returned from this route
     app.post('/quote/load/:quoteid',
         checkAuthMW(true),
-        getQouteMW(objectRepository),
+        getQuoteMW(objectRepository),
         (req, res) => {
-            if (!res.locals.quote) return res.status(404).json({ error: 'Quote not found' });
-            return res.json(res.locals.quote); //
+            if (!res.locals.quote)
+            {
+                return res.status(404).json({ error: 'Quote not found' });
+            }
+            return res.json(res.locals.quote); //return the Quote document
         }
     );
 
+    // Project
     app.get('/project',
         checkAuthMW(),
         getListOfProjectsMW(objectRepository, true),
         renderMW(objectRepository, 'project')
     );
 
+    // Add a new project
     app.get('/project/add',
         checkAuthMW(true),
         getListOfQuotesMW(objectRepository),
@@ -63,6 +72,7 @@ module.exports = function (app) {
         renderMW(objectRepository, 'projectmodify')
     );
 
+    // Modify an existing project
     app.get('/project/modify/:projectid',
         checkAuthMW(true),
         getListOfQuotesMW(objectRepository),
@@ -72,6 +82,7 @@ module.exports = function (app) {
         renderMW(objectRepository, 'projectmodify')
     );
 
+    // Save a new project or update an existing one
     app.post('/project/save/:projectid?',
         checkAuthMW(true),
         saveProjectMW(objectRepository),

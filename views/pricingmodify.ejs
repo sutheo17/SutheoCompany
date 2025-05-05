@@ -6,8 +6,8 @@
     <div class="d-flex mb-4 align-items-start">
       <img src="<%= product.image_path ? '/images/' + product.image_path : 'https://placehold.co/200x150' %>" alt="Product Image" class="me-3" style="max-width: 200px;">
       <div>
-        <p class="mb-1">Name: <span class="text-danger"><%= product.name %></span></p>
-        <p class="mb-1">Item number: <span class="text-danger"><%= product.item_number %></span></p>
+        <p class="mb-1">Name: <span class="text-dark"><strong><%= product.name %></strong></span></p>
+        <p class="mb-1">Item number: <span class="text-dark"><strong><%= product.item_number %></strong></span></p>
       </div>
     </div>
 

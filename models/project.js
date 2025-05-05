@@ -1,33 +1,28 @@
-const mongoose = require('mongoose');
+/*
+    Project collection
+ */
+const Schema = require('mongoose').Schema;
+const db = require('../config/db');
 
-const ProjectSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true,
-    },
-    dateFrom: {
-        type: Date,
-        required: true,
-    },
-    dateTo: {
-        type: Date,
-        required: true,
-    },
+const Project = db.model('Project', new Schema({
+    name: String,
+    dateFrom: Date,
+    dateTo: Date,
     quote: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'Quote',
         required: true,
     },
     team: [{
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'User',
         required: true,
     }],
     customer: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'Customer',
         required: true,
     }
-});
+}));
 
-module.exports = mongoose.models.Project || mongoose.model('Project', ProjectSchema);
+module.exports = Project

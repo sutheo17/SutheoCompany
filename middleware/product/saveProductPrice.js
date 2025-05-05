@@ -1,6 +1,8 @@
+/*
+    Used for updating the product price (so not every field has to be updated
+ */
+
 const requireOption = require('../common/requireOption');
-const path = require('path');
-const fs = require('fs');
 
 module.exports = function (objectRepository) {
     const ProductModel = requireOption(objectRepository, 'ProductModel');
@@ -8,8 +10,6 @@ module.exports = function (objectRepository) {
     return function (req, res, next) {
         const product = res.locals.product;
 
-        console.log('req.body:', req.body);
-        console.log('res.locals.product:', res.locals.product);
 
         if (!product) {
             return next(new Error('Product not found in res.locals'));
@@ -19,6 +19,7 @@ module.exports = function (objectRepository) {
             return next(new Error('Missing price in form data'));
         }
 
+        //update the price
         product.price = parseInt(req.body.price, 10);
 
         product.save()

@@ -1,7 +1,8 @@
-const requireOption = require('../common/requireOption');
+/*
+    Get the projects grouped by counties.
+ */
 
 module.exports = function (objectRepository) {
-    const ProjectModel = requireOption(objectRepository, 'ProjectModel');
 
     return function (req, res, next) {
         const projects = res.locals.projects;
@@ -12,14 +13,13 @@ module.exports = function (objectRepository) {
 
         const countyCounts = {};
 
+        //get the county for each project through the customer field
         projects.forEach(project => {
-            const county = project.customer?.county || 'Ismeretlen';
+            const county = project.customer?.county || 'Unknown';
             countyCounts[county] = (countyCounts[county] || 0) + 1;
         });
 
-        console.log("lefut")
-
-        // Készítsük elő a chart.js-hez szükséges adatokat
+        //return this dictionary
         res.locals.countyChartData = {
             labels: Object.keys(countyCounts),
             data: Object.values(countyCounts)

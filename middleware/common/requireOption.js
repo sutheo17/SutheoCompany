@@ -1,6 +1,7 @@
 /*
     Check and load dependencies.
  */
+
 function requireOption(objectRepository, propertyName)
 {
     if(objectRepository && objectRepository[propertyName])

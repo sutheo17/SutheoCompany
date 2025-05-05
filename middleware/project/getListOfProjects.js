@@ -1,3 +1,7 @@
+/*
+    Get the list of projects (res.locals.projects)
+ */
+
 const requireOption = require('../common/requireOption');
 
 module.exports = function (objectRepository, onlyForLeaders) {
@@ -14,12 +18,12 @@ module.exports = function (objectRepository, onlyForLeaders) {
 
         if (onlyForLeaders) {
             if (user.leader) {
-                query = {}; // leader + onlyForLeaders: minden projekt
+                query = {}; // leader + onlyForLeaders -> all projects
             } else {
-                query = { team: user._id }; // nem leader + onlyForLeaders: csak saját
+                query = { team: user._id }; // non_leader + onlyForLeaders -> just the projects related to the user
             }
         } else {
-            query = {}; // onlyForLeaders === false => mindenki lát mindent
+            query = {}; // onlyForLeaders === false -> everybody can se all projects
         }
 
         ProjectModel.find(query)

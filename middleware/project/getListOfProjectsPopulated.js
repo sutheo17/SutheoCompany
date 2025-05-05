@@ -1,3 +1,7 @@
+/*
+    Get the list of projects with the team and customer included (res.locals.projects)
+ */
+
 const requireOption = require('../common/requireOption');
 
 module.exports = function (objectRepository, onlyForLeaders) {
@@ -14,19 +18,19 @@ module.exports = function (objectRepository, onlyForLeaders) {
 
         if (onlyForLeaders) {
             if (user.leader) {
-                query = {}; // leader + onlyForLeaders: minden projekt
+                query = {}; // leader + onlyForLeaders -> all projects
             } else {
-                query = { team: user._id }; // nem leader + onlyForLeaders: csak saját
+                query = { team: user._id }; // non_leader + onlyForLeaders -> just the projects related to the user
             }
         } else {
-            query = {}; // onlyForLeaders === false => mindenki lát mindent
+            query = {}; // onlyForLeaders === false -> everybody can se all project
         }
 
         ProjectModel.find(query)
             .populate('team')
             .populate('customer')
+            .populate('quote')
             .then((projects) => {
-                console.log(projects);
                 res.locals.projects = projects;
                 return next();
             })

@@ -1,3 +1,7 @@
+/*
+    Save a new transaction or update an existing one.
+ */
+
 const requireOption = require('../common/requireOption');
 
 module.exports = function (objectRepository) {
@@ -22,25 +26,24 @@ module.exports = function (objectRepository) {
             parsedDate = new Date();
         }
 
+        //checking if the product is sheet
         const isSheet = product.category.toLowerCase() === 'sheet';
-        const isNew = transaction.isNew;
+
+        //quantities
         const prevQty = transaction.quantity || 0;
         const diff = qty - prevQty;
 
-        console.log(qty)
-        console.log(prevQty);
-        console.log(diff)
-
-        // Tranzakció mezők (közös)
+        //default fields
         transaction._user = res.locals.transactionUser || user._id;
         transaction.date = parsedDate;
         transaction._product = product._id;
         transaction.quantity = qty;
 
+        //SHEET fields
         if (isSheet) {
             let selectedSize = null;
 
-            // Próbáljuk sizeIndex alapján
+            //try getting the size by index
             if (typeof req.body.sizeIndex !== 'undefined') {
                 const sizeIndex = parseInt(req.body.sizeIndex, 10);
                 if (!isNaN(sizeIndex)) {
@@ -48,7 +51,7 @@ module.exports = function (objectRepository) {
                 }
             }
 
-            // Próbáljuk visszakeresni meglévő size alapján
+            //try searching for the size
             if (!selectedSize && transaction.size) {
                 selectedSize = product.sizes?.find(size =>
                     size.height === transaction.size.height &&
@@ -56,12 +59,12 @@ module.exports = function (objectRepository) {
                 );
             }
 
-            const newSizeTemplate = transaction.size || {}; // biztonság kedvéért
+            const newSizeTemplate = transaction.size || {};
             const isReturning = diff < 0;
             const returningQty = Math.abs(diff);
 
             if (!selectedSize) {
-                // Ha visszatöltünk és méret már nincs, újra létrehozzuk
+                //if the selected size does not exist anymore add that to the array
                 if (isReturning) {
                     selectedSize = {
                         height: newSizeTemplate.height,
@@ -77,7 +80,11 @@ module.exports = function (objectRepository) {
                     return next(new Error('Not enough stock in selected size.'));
                 }
 
-                selectedSize.quantity -= diff; // működik mindkét irányban (negatív = növel)
+                //update the in stock
+                //if transaction quantity
+                //              + -> then remove the amount from stock
+                //              - -> add the amount to stock
+                selectedSize.quantity -= diff;
             }
 
             transaction.size = {
@@ -87,24 +94,32 @@ module.exports = function (objectRepository) {
 
             return transaction.save()
                 .then(() => {
+                    //remove sizes which are not in stock anymore
                     product.sizes = product.sizes.filter(size => size.quantity > 0);
                     return product.save();
                 })
                 .then(() => res.redirect(`/`))
                 .catch(err => next(err));
         }
+        else
+        {
+            //DISCRETE fields
 
+            //check if we have enough in stock to modify the transaction
+            if (product.in_stock < diff) {
+                return next(new Error('Not enough items in stock'));
+            }
 
-        // --- DISCRETE logika ---
-        if (product.in_stock < diff) {
-            return next(new Error('Not enough items in stock'));
+            //update the in stock
+            //if transaction quantity
+            //              + -> then remove the amount from stock
+            //              - -> add the amount to stock
+            product.in_stock -= diff;
+
+            return transaction.save()
+                .then(() => product.save())
+                .then(() => res.redirect(`/`))
+                .catch(err => next(err));
         }
-
-        product.in_stock -= diff;
-
-        return transaction.save()
-            .then(() => product.save())
-            .then(() => res.redirect(`/`))
-            .catch(err => next(err));
     };
 };

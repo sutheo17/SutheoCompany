@@ -1,3 +1,7 @@
+/*
+    Save a new quote or update an existing one.
+ */
+
 const requireOption = require('../common/requireOption');
 
 module.exports = function (objectRepository) {
@@ -6,52 +10,58 @@ module.exports = function (objectRepository) {
     return async function (req, res, next) {
         let items = [];
 
+        //try parsing the json
         try {
             items = JSON.parse(req.body.items);
         } catch (e) {
-            console.error('❌ JSON parsing error:', e.message);
-            return res.status(400).send('Invalid format');
+            res.locals.error = `JSON parsing error: ${e.message}`;
+            return next();
         }
 
         if (!Array.isArray(items)) {
-            return res.status(400).send('Invalid format');
+            res.locals.error = `Invalid format.`;
+            return next();
         }
 
         const projectName = req.body.project_name?.trim();
         if (!projectName) {
-            return res.status(400).send('Missing project name');
+            res.locals.error = `Missing project name: ${projectName}.`;
+            return next();
         }
 
-        console.log
         const quoteId = req.params.quoteid;
 
-        try {
-            let quote;
+        let quote;
 
-            if (quoteId) {
-                // 🔁 Frissítés meglévő dokumentumra
-                quote = await QuoteModel.findById(quoteId);
-                if (!quote) {
-                    return res.status(404).send('Quote not found');
-                }
-
-                quote.project_name = projectName;
-                quote.items = items;
-                console.log(`🟡 Updating quote ${quoteId}`);
-            } else {
-                // 🆕 Új példány
-                quote = new QuoteModel({
-                    project_name: projectName,
-                    items
-                });
-                console.log('🟢 Creating new quote');
+        //check if a quote was given
+        if (quoteId) {
+            quote = await QuoteModel.findById(quoteId);
+            if (!quote) {
+                res.locals.error = 'Qoute not found';
+                return next();
             }
 
-            await quote.save();
-            console.log(`✅ Quote saved (${quote._id})`);
-            return res.redirect('/');
-        } catch (err) {
-            return next(err);
+            quote.project_name = projectName;
+            quote.items = items;
+            console.log(`Updating quote ${quoteId}`);
+        } else {
+            //create a new quote
+            quote = new QuoteModel({
+                project_name: projectName,
+                items
+            });
+            console.log('Creating new quote');
         }
+
+        quote.profit = parseFloat(req.body.profit) || 0;
+        quote.calculated_price = parseFloat(req.body.calculated_price) || 0;
+        quote.final_price = parseFloat(req.body.final_price) || 0;
+
+        quote.save()
+            .then(() => {
+                console.log(`Project saved (${quote._id})`);
+                res.redirect(`/`);
+            })
+            .catch((err) => next(err));
     };
 };

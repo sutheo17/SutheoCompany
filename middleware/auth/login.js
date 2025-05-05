@@ -1,5 +1,5 @@
 /*
-    Render HTML pages
+    Login the user using session library (req.session.user)
  */
 
 const requireOption = require('../common/requireOption');
@@ -17,6 +17,7 @@ module.exports = function (objectRepository) {
                         return res.redirect('/login');
                     }
 
+                    //save the user info into the session
                     req.session.user = user;
                     return res.redirect('/');
                 })

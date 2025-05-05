@@ -13,14 +13,14 @@
             </td>
             <td class="col-6">
               Name:
-              <input type="text" name="name" class="form-control text-danger" placeholder="Name" required
+              <input type="text" name="name" class="form-control text-dark" placeholder="Name" required
                      value="<% if (typeof product !== 'undefined') { %><%= product.name %><% } else { %><% } %>">
             </td>
           </tr>
           <tr>
             <td class="col-6">
               Item number:
-              <input type="text" name="item_number" class="form-control text-danger" placeholder="Item number"  value="<% if (typeof product !== 'undefined') { %><%= product.item_number %><% } %>" required>
+              <input type="text" name="item_number" class="form-control text-dark" placeholder="Item number"  value="<% if (typeof product !== 'undefined') { %><%= product.item_number %><% } %>" required>
             </td>
           </tr>
           <tr>
@@ -30,7 +30,7 @@
                   Category:
                   <% if (typeof product === 'undefined') { %>
                     <!-- ÚJ TERMÉK: kategória választható -->
-                    <select name="category" id="categorySelect" class="form-control text-danger" required>
+                    <select name="category" id="categorySelect" class="form-control text-dark" required>
                       <option value="">-- Select --</option>
                       <option value="Discrete">Discrete</option>
                       <option value="Sheet">Sheet</option>
@@ -38,14 +38,14 @@
                   <% } else { %>
                     <!-- MÓDOSÍTÁS: kategória fix szövegként, de elküldve rejtve -->
                     <input type="hidden" name="category" value="<%= product.category %>">
-                    <input type="text" class="form-control text-danger" value="<%= product.category %>" readonly>
+                    <input type="text" class="form-control text-dark" value="<%= product.category %>" readonly>
                   <% } %>
                 </div>
 
                 <!-- Sub-category OR Color -->
                 <div class="col-md-6" id="subColorGroup" style="display: none;">
                   <label id="subColorLabel">Sub-category:</label>
-                  <input type="text" name="subcategory" class="form-control text-danger" id="subColorInput" placeholder="" value="<% if (typeof product !== 'undefined') { %><%= product.color || product.subcategory || '' %><% } %>">
+                  <input type="text" name="subcategory" class="form-control text-dark" id="subColorInput" placeholder="" value="<% if (typeof product !== 'undefined') { %><%= product.color || product.subcategory || '' %><% } %>">
                 </div>
               </div>
             </td>
@@ -57,11 +57,11 @@
               <div class="row">
                 <div class="col-md-6">
                   Manufacturer:
-                  <input type="text" name="manufacturer" class="form-control text-danger" placeholder="Manufacturer"  value="<% if (typeof product !== 'undefined') { %><%= product.manufacturer %><% } %>">
+                  <input type="text" name="manufacturer" class="form-control text-dark" placeholder="Manufacturer"  value="<% if (typeof product !== 'undefined') { %><%= product.manufacturer %><% } %>">
                 </div>
                 <div class="col-md-6">
                   Supplier:
-                  <input type="text" name="supplier" class="form-control text-danger" placeholder="Supplier"  value="<% if (typeof product !== 'undefined') { %><%= product.supplier %><% } %>">
+                  <input type="text" name="supplier" class="form-control text-dark" placeholder="Supplier"  value="<% if (typeof product !== 'undefined') { %><%= product.supplier %><% } %>">
                 </div>
               </div>
             </td>
@@ -73,17 +73,17 @@
               <div class="row" id="discreteFields" style="display: none;">
                 <div class="col-md-12">
                   In stock:
-                  <input type="number" name="in_stock" class="form-control text-danger" value="<% if (typeof product !== 'undefined') { %><%= product.in_stock %><% } else { %>0<% } %>" min="0">
+                  <input type="number" name="in_stock" class="form-control text-dark" value="<% if (typeof product !== 'undefined') { %><%= product.in_stock %><% } else { %>0<% } %>" min="0">
                 </div>
               </div>
               <div class="row" id="sheetFields" style="display: none;">
                 <div class="col-md-6">
                   Size(s) (mm):
-                  <input type="text" name="sizes" class="form-control text-danger" placeholder="[height]x[width]x[pieces] format"  value="<% if (typeof product !== 'undefined' && product.sizes) { %><%= product.sizes.map(s => s.height + 'x' + s.width + 'x' + s.quantity).join(';') %><% } %>">
+                  <input type="text" name="sizes" class="form-control text-dark" placeholder="[height]x[width]x[pieces] format"  value="<% if (typeof product !== 'undefined' && product.sizes) { %><%= product.sizes.map(s => s.height + 'x' + s.width + 'x' + s.quantity).join(';') %><% } %>">
                 </div>
                 <div class="col-md-6">
                   Thickness (mm):
-                  <input type="number" name="thickness" class="form-control text-danger" placeholder="Thickness in mm" min="0" step="0.01"  value="<% if (typeof product !== 'undefined') { %><%= product.thickness %><% } %>">
+                  <input type="number" name="thickness" class="form-control text-dark" placeholder="Thickness in mm" min="0" step="0.01"  value="<% if (typeof product !== 'undefined') { %><%= product.thickness %><% } %>">
                 </div>
               </div>
             </td>
@@ -102,6 +102,7 @@
   </form>
 </div>
 
+<!-- toggle fields depending on the category -->
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const categorySelect = document.getElementById('categorySelect');
@@ -130,6 +131,7 @@
 
         discreteFields.style.display = '';
         sheetFields.style.display = 'none';
+
       } else if (value === 'Sheet') {
         subColorLabel.innerText = 'Color:';
         subColorInput.name = 'color';
@@ -137,6 +139,7 @@
 
         discreteFields.style.display = 'none';
         sheetFields.style.display = '';
+
       } else {
         subColorGroup.style.display = 'none';
         manufacturerSupplierRow.style.display = 'none';
@@ -144,10 +147,10 @@
       }
     }
 
-    // Init mezők megjelenítése szerveroldali kategória alapján
+    // Init the fields if a product was given already
     toggleFields(serverCategory);
 
-    // Új termék esetén reagál a kiválasztásra is
+    // If a new product gets added, on category change toggle the fields for that category
     if (categorySelect) {
       categorySelect.addEventListener('change', () => toggleFields());
     }

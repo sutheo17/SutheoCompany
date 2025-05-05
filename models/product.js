@@ -1,7 +1,11 @@
+/*
+    Product collection
+ */
+
 const Schema = require('mongoose').Schema;
 const db = require('../config/db');
 
-const ProductSchema = new Schema({
+const Product = db.model('Product', new Schema({
     name: String,
     item_number: String,
     category: String,
@@ -18,8 +22,6 @@ const ProductSchema = new Schema({
         quantity: Number
     }],
     price: Number
-});
-
-const Product = db.model('Product', ProductSchema);
+}));
 
 module.exports = Product;

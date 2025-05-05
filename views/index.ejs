@@ -26,14 +26,14 @@
                             <img src="<%= product.image_path ? '/images/' + product.image_path : 'https://placehold.co/80x150' %>" alt="Product Image" width="80" class="me-3">
                         </a>
                         <div class="w-100">
-                            <a href="/product/<%= product._id %>" class="text-decoration-none text-dark">
+                            <a href="/product/<%= product._id %>" class="text-decoration-none text-dark"><strong>
                                 <p class="<%= outOfStock ? 'text-danger' : 'text-success' %> mb-1">
                                     <% if (isSheet) { %>
                                         <%= outOfStock ? 'Out of stock' : 'In stock'%>
                                     <% } else { %>
                                         <%= outOfStock ? 'Out of stock' : 'In stock (' + product.in_stock + ')' %>
                                     <% } %>
-                                </p>
+                                </p></strong>
                                 <p class="mb-1"><%= product.name %></p>
                                 <p class="mb-1"><%= product.item_number %></p>
                             </a>
@@ -59,6 +59,7 @@
                                             Take out
                                         </button>
 
+                                        <!-- update max quantity for each size -->
                                         <script>
                                             const sizes_<%= product._id %> = <%- JSON.stringify(product.sizes) %>;
 

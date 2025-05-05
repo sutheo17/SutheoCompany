@@ -1,3 +1,7 @@
+/*
+    Get a single quote (res.locals.quote)
+ */
+
 const requireOption = require('../common/requireOption');
 
 module.exports = function (objectRepository) {
@@ -8,6 +12,7 @@ module.exports = function (objectRepository) {
         QuoteModel.findOne({_id:req.params.quoteid})
             .then((quote) =>
             {
+                console.log(quote);
                 res.locals.quote = quote;
                 return next();
             }).catch((err) => {return next(err)});

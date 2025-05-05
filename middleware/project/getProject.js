@@ -1,3 +1,7 @@
+/*
+    Get a single project (res.locals.project)
+ */
+
 const requireOption = require('../common/requireOption');
 
 module.exports = function (objectRepository) {
@@ -6,6 +10,7 @@ module.exports = function (objectRepository) {
 
     return function (req, res, next) {
         ProjectModel.findOne({_id:req.params.projectid})
+            .populate('quote')
             .then((project) =>
             {
                 res.locals.project = project;

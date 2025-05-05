@@ -1,3 +1,7 @@
+/*
+    Get the list of transactions (res.locals.transactions)
+ */
+
 const requireOption = require('../common/requireOption');
 
 module.exports = function (objectRepository) {
@@ -12,6 +16,7 @@ module.exports = function (objectRepository) {
             .populate('_product')
             .populate('_user')
             .then((transactions) => {
+                console.log("TRANSACTIONS")
                 console.log(transactions);
             res.locals.transactions = transactions;
             return next();

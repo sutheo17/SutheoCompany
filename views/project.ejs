@@ -7,8 +7,10 @@
   </div>
 <% } %>
 
+<!-- load in the calendar -->
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 
+<!-- display the calendar -->
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const calendarEl = document.getElementById('calendar');
@@ -21,6 +23,7 @@
         center: 'title',
         right: 'next'
       },
+      // add the projects from the database
       events: [
         <% projects.forEach(project => { %>
         {
@@ -32,7 +35,7 @@
         <% }) %>
       ],
       eventClick: function(info) {
-        // A `url` mező miatt nem kell kézzel kezelni a kattintást
+        // clicking on the project redirects to the project detail page
         info.jsEvent.preventDefault();
         if (info.event.url) {
           window.location.href = info.event.url;
@@ -40,6 +43,7 @@
       }
     });
 
+    //render the calendar
     calendar.render();
   });
 </script>

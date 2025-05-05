@@ -1,3 +1,7 @@
+/*
+    Save a new project or update an existing one.
+ */
+
 const requireOption = require('../common/requireOption');
 
 module.exports = function (objectRepository) {
@@ -8,47 +12,53 @@ module.exports = function (objectRepository) {
             name,
             dateFrom,
             dateTo,
-            quote,
+            quote,       // JSON string containing items + prices
             team,
-            customer
+            customer,
+            profit,
+            calculated_price,
+            final_price
         } = req.body;
 
-        // Validáció
+        //validate the params
         if (!name || !dateFrom || !dateTo || !quote || !team || !customer) {
-            res.locals.error = 'Minden mezőt ki kell tölteni!';
-            return next(); // Render a 'projectmodify' view hibával
+            res.locals.error = 'All fields need to be given';
+            return next();
         }
 
-        try {
-            let project;
+        let project;
 
-            if (req.params.projectid) {
-                // Létező projekt módosítása
-                project = await ProjectModel.findById(req.params.projectid);
-                if (!project) {
-                    res.locals.error = 'Projekt nem található!';
-                    return next();
-                }
-            } else {
-                // Új projekt létrehozása
-                project = new ProjectModel();
+        //check if a project was given
+        if (req.params.projectid) {
+            project = await ProjectModel.findById(req.params.projectid);
+            if (!project) {
+                res.locals.error = 'Project not found';
+                return next();
             }
 
-            // Mezők mentése
-            project.name = name;
-            project.dateFrom = new Date(dateFrom);
-            project.dateTo = new Date(dateTo);
-            project.quote = quote;
-            project.team = Array.isArray(team) ? team : [team]; // Ha csak egy user van kiválasztva
-            project.customer = customer;
-
-            await project.save();
-
-            return res.redirect('/project');
-        } catch (err) {
-            console.error(err);
-            res.locals.error = 'Hiba történt a mentés során.';
-            return next(); // Render hibával
+            project.profit = profit;
+            project.calculated_price = calculated_price;
+            project.final_price = final_price;
+        } else {
+            //creating a new project
+            project = new ProjectModel();
         }
+
+        //Save the fields
+        project.name = name;
+        project.dateFrom = new Date(dateFrom);
+        project.dateTo = new Date(dateTo);
+        project.quote = quote;
+        project.team = Array.isArray(team) ? team : [team]; //check if multiple user was given
+        project.customer = customer;
+
+
+        //Save the project
+        project.save()
+            .then(() => {
+                console.log(`Project saved (${project._id})`);
+                res.redirect(`/project`);
+            })
+            .catch((err) => next(err));
     };
 };

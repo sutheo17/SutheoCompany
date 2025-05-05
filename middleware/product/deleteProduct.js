@@ -1,3 +1,6 @@
+/*
+    Delete a product from the database
+ */
 const requireOption = require('../common/requireOption');
 
 module.exports = function (objectRepository) {

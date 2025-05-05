@@ -8,7 +8,7 @@ app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
 
 app.use(session({
-    secret: '1nD*Fs9v@L0X#fA!', //TODO: REPLACE THIS
+    secret: '1nD*Fs9v@L0X#fA!',
     resave: false,
     saveUninitialized: false
 }));
@@ -27,6 +27,11 @@ require('./routes/transactionTask')(app);
 app.use(express.static('static'));
 app.use(express.static('images'));
 app.use('/images', express.static(path.join('C:/SutheoCompany/images')));
+
+app.use((err, req,res,next) =>{
+    res.end('Houston, we have a problem..');
+    console.log(err);
+});
 
 const server = app.listen(3000, function () {
     console.log("Listening on: 3000")

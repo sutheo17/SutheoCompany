@@ -1,7 +1,6 @@
 <%- include('header', {pagetitle: 'CustomerModify'}) -%>
 <div class="container d-flex justify-content-center align-items-center mt-5">
   <div class="w-100" style="max-width: 400px;">
-    <!-- Delete gomb: külön formként -->
     <% if (customer?._id) { %>
       <form method="POST" action="/customer/delete/<%= customer._id %>" class="text-center mt-3" onsubmit="return confirm('Are you sure you want to delete this customer?');">
         <input type="hidden" name="customer_id" value="<%= customer._id %>">
@@ -10,7 +9,7 @@
     <% } %>
     <form method="POST" action="/customer/save/<%= customer?._id || '' %>">
 
-      <!-- input mezők -->
+      <!-- INPUTS -->
       <div class="mb-3">
         <label class="form-label">Name:</label>
         <input type="text" name="name" class="form-control" value="<%= customer?.name || '' %>">
@@ -56,7 +55,7 @@
         <input type="text" name="phone" class="form-control" value="<%= customer?.phone || '' %>">
       </div>
 
-      <!-- Save / Cancel -->
+      <!-- SAVE / CANCEL -->
       <div class="d-flex justify-content-between align-items-center mt-4">
         <div class="d-flex gap-3">
           <button type="submit" class="btn btn-success">Save</button>

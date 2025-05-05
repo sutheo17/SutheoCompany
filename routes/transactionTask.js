@@ -17,6 +17,7 @@ module.exports = function (app) {
         UserModel: UserModel
     };
 
+    // Save the modifications made to the transaction
     app.post('/transaction/save/:productid/:transactionid?',
         checkAuthMW(false),
         getProductMW(objectRepository),
@@ -25,6 +26,7 @@ module.exports = function (app) {
         saveTransactionMW(objectRepository)
     );
 
+    // Transactions for a certain product
     app.get('/transaction/:productid',
         checkAuthMW(false),
         getProductMW(objectRepository),
@@ -32,6 +34,7 @@ module.exports = function (app) {
         renderMW(objectRepository, 'transaction')
     );
 
+    // Modify a transaction
     app.get('/transaction/modify/:productid/:transactionid',
         checkAuthMW(true),
         getListOfUserMW(objectRepository),

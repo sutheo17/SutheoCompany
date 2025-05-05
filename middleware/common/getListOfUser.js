@@ -1,3 +1,7 @@
+/*
+    Get the user list (res.locals.users)
+ */
+
 const requireOption = require('../common/requireOption');
 
 module.exports = function (objectRepository) {

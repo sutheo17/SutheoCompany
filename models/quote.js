@@ -1,8 +1,15 @@
-const mongoose = require('mongoose');
+/*
+    Quote collection
+ */
+
+const Schema = require('mongoose').Schema;
 const db = require('../config/db');
 
-const QuoteSchema = new mongoose.Schema({
-    project_name: { type: String, required: true },
+const Quote = db.model('Quote', new Schema({
+    project_name: String,
+    profit: Number,
+    calculated_price: Number,
+    final_price: Number,
     items: [
         {
             item_number: { type: String, required: true },
@@ -10,6 +17,6 @@ const QuoteSchema = new mongoose.Schema({
         }
     ],
     created_at: Date
-});
+}));
 
-module.exports = mongoose.model('Quote', QuoteSchema);
+module.exports = Quote

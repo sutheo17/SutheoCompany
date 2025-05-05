@@ -1,20 +1,39 @@
 <%- include('header', {pagetitle: 'Trends'}) -%>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <div style="width: 600px; margin: 50px auto;">
   <canvas id="projectsPieChart"></canvas>
 </div>
 
+<div style="width: 800px; margin: 50px auto;">
+  <canvas id="productUsageChart"></canvas>
+</div>
+
+<div style="width: 800px; margin: 50px auto;">
+  <canvas id="durationProfitChart"></canvas>
+</div>
+
+<div style="width: 800px; margin: 50px auto;">
+  <canvas id="priceVsSalesChart"></canvas>
+</div>
+
+<div style="width: 800px; margin: 50px auto;">
+  <canvas id="monthlySalesChart"></canvas>
+</div>
+
 <script>
-  const ctx = document.getElementById('projectsPieChart').getContext('2d');
+  // === 1. Pie chart: Projects by counties ===
+  const ctxPie = document.getElementById('projectsPieChart').getContext('2d');
   const labels = <%- JSON.stringify(countyChartData.labels) %>;
   const data = <%- JSON.stringify(countyChartData.data) %>;
 
-  new Chart(ctx, {
+  new Chart(ctxPie, {
     type: 'pie',
     data: {
       labels: labels,
       datasets: [{
-        label: 'Projektek megyénként',
+        label: 'Projects by counties',
         data: data,
         borderWidth: 1
       }]
@@ -24,16 +43,227 @@
       plugins: {
         title: {
           display: true,
-          text: 'Projektek megyénként',
-          font: {
-            size: 24
-          }
+          text: 'Projects by counties',
+          font: { size: 24 }
         },
-        legend: {
-          position: 'bottom'
+        legend: { position: 'bottom' }
+      }
+    }
+  });
+
+  // === 2. Bar chart: Product usage from quotes ===
+  const quotes = <%- JSON.stringify(quotes) %>;
+  const products = <%- JSON.stringify(products) %>;
+
+  const usageCount = {};
+  quotes.forEach(quote => {
+    quote.items.forEach(item => {
+      if (!usageCount[item.item_number]) usageCount[item.item_number] = 0;
+      usageCount[item.item_number] += item.quantity;
+    });
+  });
+
+  const productLabels = [];
+  const productData = [];
+
+  products.forEach(product => {
+    const count = usageCount[product.item_number] || 0;
+    productLabels.push(product.name || product.item_number);
+    productData.push(count);
+  });
+
+  const ctxUsage = document.getElementById('productUsageChart').getContext('2d');
+
+  new Chart(ctxUsage, {
+    type: 'bar',
+    data: {
+      labels: productLabels,
+      datasets: [{
+        label: 'Used pieces',
+        data: productData,
+        backgroundColor: 'rgba(75, 192, 192, 0.6)',
+        borderColor: 'rgba(75, 192, 192, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Most used products',
+          font: { size: 22 }
+        },
+        legend: { display: false }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          title: { display: true, text: 'Pieces' }
+        },
+        x: {
+          ticks: {
+            autoSkip: false,
+            maxRotation: 45,
+            minRotation: 45
+          }
+        }
+      }
+    }
+  });
+
+  // === 3. Scatter chart: Project duration (days) vs. Profit (calculated from final - calculated) ===
+  const projects = <%- JSON.stringify(projects) %>;
+
+  const projectDurations = projects
+          .map(p => {
+            try {
+              if (!p.dateFrom || !p.dateTo || !p.quote) return null;
+              const { final_price, calculated_price } = p.quote || {};
+              if (typeof final_price !== 'number' || typeof calculated_price !== 'number') return null;
+
+              const from = new Date(p.dateFrom);
+              const to = new Date(p.dateTo);
+              const duration = (to - from) / (1000 * 60 * 60 * 24);
+              const profit = final_price - calculated_price;
+
+              if (isNaN(duration) || duration < 0 || isNaN(profit)) return null;
+
+              return {
+                x: duration,
+                y: profit,
+                label: p.name || 'Unnamed project'
+              };
+            } catch (err) {
+              console.error('Invalid project:', p, err);
+              return null;
+            }
+          })
+          .filter(Boolean);
+          projectDurations.sort((a, b) => a.x - b.x);
+
+
+  console.log('Scatter data (duration vs real profit):', projectDurations);
+
+  new Chart(document.getElementById('durationProfitChart').getContext('2d'), {
+    type: 'scatter',
+    data: {
+      datasets: [{
+        label: 'Project duration vs. profit (calculated)',
+        data: projectDurations,
+        backgroundColor: 'rgba(255, 99, 132, 0.6)',
+        showLine: true, // draw line between points
+        borderColor: 'rgba(255, 99, 132, 1)',
+        borderWidth: 2,
+        tension: 0.3 // smooth curve, set to 0 for straight lines
+      }]
+    },
+    options: {
+      plugins: {
+        title: {
+          display: true,
+          text: 'Project Duration (days) vs. Profit (Final - Calculated)'
+        },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              const point = context.raw;
+              return `${point.label}: ${point.x} days, ${point.y} HUF profit`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          title: { display: true, text: 'Duration (days)' }
+        },
+        y: {
+          title: { display: true, text: 'Profit (HUF)' }
+        }
+      }
+    }
+  });
+
+  // === 4. Scatter chart: Product price vs. used quantity ===
+  const priceUsagePoints = products
+          .filter(p => p.price)
+          .map(p => {
+            const totalUsed = usageCount[p.item_number] || 0;
+            return {
+              x: p.price,
+              y: totalUsed,
+              label: p.name || p.item_number // Store name for tooltip
+            };
+          })
+          .filter(point => point.y > 0); // Only include used products
+
+  // Calculate linear regression
+  function linearRegression(data) {
+    const n = data.length;
+    const sumX = data.reduce((sum, d) => sum + d.x, 0);
+    const sumY = data.reduce((sum, d) => sum + d.y, 0);
+    const sumXY = data.reduce((sum, d) => sum + d.x * d.y, 0);
+    const sumX2 = data.reduce((sum, d) => sum + d.x * d.x, 0);
+
+    const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+    const intercept = (sumY - slope * sumX) / n;
+
+    const minX = Math.min(...data.map(d => d.x));
+    const maxX = Math.max(...data.map(d => d.x));
+
+    return [
+      { x: minX, y: slope * minX + intercept },
+      { x: maxX, y: slope * maxX + intercept }
+    ];
+  }
+
+  new Chart(document.getElementById('priceVsSalesChart').getContext('2d'), {
+    type: 'scatter',
+    data: {
+      datasets: [
+        {
+          label: 'Product price vs. used quantity',
+          data: priceUsagePoints,
+          backgroundColor: 'rgba(54, 162, 235, 0.6)',
+          showLine: false,
+          pointRadius: 5
+        },
+        {
+          label: 'Trend line',
+          data: linearRegression(priceUsagePoints),
+          type: 'line',
+          borderColor: 'rgba(0,0,0,0.6)',
+          borderDash: [5, 5],
+          fill: false,
+          pointRadius: 0
+        }
+      ]
+    },
+    options: {
+      plugins: {
+        title: {
+          display: true,
+          text: 'Product Price vs. Used Quantity (based on quotes)'
+        },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              const point = context.raw;
+              return `${point.label}: ${point.x} HUF, ${point.y} pcs`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          title: { display: true, text: 'Price (HUF)' }
+        },
+        y: {
+          title: { display: true, text: 'Used quantity' }
         }
       }
     }
   });
 </script>
+
 <%- include('footer') -%>

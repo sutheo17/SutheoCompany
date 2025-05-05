@@ -1,6 +1,9 @@
+/*
+    Transaction collection
+ */
+
 const Schema = require('mongoose').Schema;
 const db = require('../config/db');
-const Product = require("./product");
 
 const Transaction = db.model('Transaction', new Schema({
     _user: {

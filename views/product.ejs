@@ -20,17 +20,17 @@
           <td class="col-3 align-middle" rowspan="6">
             <img src="<%= product.image_path ? '/images/' + product.image_path : 'https://placehold.co/310x250' %>" style="width: 310px; height: 250px; object-fit: contain;" alt="Item Image">
           </td>
-          <td class="col-6">Name: <span class="text-danger"><%= product.name %></span></td>
+          <td class="col-6">Name: <span class="text-dark"><strong><%= product.name %></strong></span></td>
         </tr>
         <tr>
-          <td class="col-6">Item number: <span class="text-danger"><%= product.item_number %></span></td>
+          <td class="col-6">Item number: <span class="text-dark"><strong><%= product.item_number %></strong></span></td>
         </tr>
         <tr>
-          <td class="col-3">Category: <span class="text-danger"><%= product.category %></span></td>
+          <td class="col-3">Category: <span class="text-dark"><strong><%= product.category %></strong></span></td>
           <% if (product.category.toLowerCase() === 'sheet') { %>
-            <td class="col-3">Color: <span class="text-danger"><%= product.color %></span></td>
+            <td class="col-3">Color: <span class="text-dark"><strong><%= product.color %></strong></span></td>
         <% } else { %>
-            <td class="col-3">Sub-category: <span class="text-danger"><%= product.subcategory %></span></td>
+            <td class="col-3">Sub-category: <span class="text-dark"><strong><%= product.subcategory %></strong></span></td>
         <% } %>
 
         </tr>
@@ -38,20 +38,20 @@
           <tr>
             <td class="col-3">
               Sizes:
-              <span class="text-danger">
-      <%= product.sizes.map(size => `${size.height}x${size.width} (${size.quantity})`).join(', ') %>
-            <td class="col-3">Thickness: <span class="text-danger"><%= product.thickness %></span> mm</td>
+              <span class="text-dark"><strong>
+      <%= product.sizes.map(size => `${size.height}x${size.width} (${size.quantity})`).join(', ') %></strong>
+            <td class="col-3">Thickness: <span class="text-dark"><strong><%= product.thickness %></strong></span> mm</td>
     </span>
             </td>
           </tr>
         <% } else { %>
           <tr>
-            <td class="col-6">In stock: <span class="text-danger"><%= product.in_stock %></span> pcs</td>
+            <td class="col-6">In stock: <span class="text-dark"><strong><%= product.in_stock %></strong></span> pcs</td>
           </tr>
         <% } %>
         <tr>
-          <td class="col-3">Manufacturer: <span class="text-danger"><%= product.manufacturer %></span></td>
-          <td class="col-3">Supplier: <span class="text-danger"><%= product.supplier %></span></td>
+          <td class="col-3">Manufacturer: <span class="text-dark"><strong><%= product.manufacturer %></strong></span></td>
+          <td class="col-3">Supplier: <span class="text-dark"><strong><%= product.supplier %></strong></span></td>
         </tr>
         <tr>
           <td class="col-6" colspan="2">

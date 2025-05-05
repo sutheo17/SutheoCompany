@@ -9,8 +9,8 @@
 
 <!-- Product Info -->
   <div class="mb-4 text-center">
-    <p class="mb-1 fs-3">Product Name: <span class="text-danger fw-semibold"><%= product.name %></span></p>
-    <p class="mb-0 fs-4">Product Item Number: <span class="text-danger fw-semibold"><%= product.item_number %></span></p>
+    <p class="mb-1 fs-3">Product Name: <span class="text-primary fw-semibold"><%= product.name %></span></p>
+    <p class="mb-0 fs-4">Product Item Number: <span class="text-primary fw-semibold"><%= product.item_number %></span></p>
   </div>
 
   <!-- Transaction Entries -->
@@ -22,15 +22,15 @@
         <!-- Box -->
         <div class="border p-3 d-flex justify-content-between align-items-center flex-grow-1">
           <div>
-            <p class="mb-1">User: <span class="text-danger"><%= transaction._user.name %> (<%= transaction._user.username %>)</span></p>
-            <p class="mb-0">Date: <span class="text-danger">
+            <p class="mb-1">User: <span class="text-dark"><strong><%= transaction._user.name %> (<%= transaction._user.username %>)</strong></span></p>
+            <p class="mb-0">Date: <span class="text-dark"><strong>
     <%= new Date(transaction.date).toLocaleString('en-GB', {
         year: 'numeric',
         month: '2-digit',
         day: '2-digit',
         hour: '2-digit',
         minute: '2-digit'
-    }) %>
+    }) %></strong>
   </span></p>
           </div>
             <% if (transaction._product.category === 'Discrete') { %>

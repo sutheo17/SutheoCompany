@@ -1,7 +1,7 @@
 <%- include('header', {pagetitle: 'TransactionModify'}) -%>
 
 <%
-// Segédfüggvény: helyi idő formátum datetime-local-hoz
+// For formatting the date time to our local timezone
 function formatLocalDatetime(date) {
   const d = new Date(date);
   const pad = n => n.toString().padStart(2, '0');

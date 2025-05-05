@@ -47,7 +47,7 @@
         <!-- Team -->
         <div class="mb-3">
           <label for="teamSelect" class="form-label">Team:</label>
-          <select class="form-select" id="teamSelect" name="team" multiple size="4" required>
+          <select class="form-select" id="teamSelect" name="team" multiple size="9" required>
             <% users.forEach(userItem => { %>
               <option
                       value="<%= userItem.id %>"
@@ -70,8 +70,10 @@
           <select class="form-select" id="quoteSelect" name="quote" required>
             <% quotes.forEach(quote => { %>
               <option
-                      value="<%= quote.id %>"
-                      <%= typeof project !== 'undefined' && quote.id === project.quote?.toString() ? 'selected' : '' %>>
+                      value="<%= quote._id || quote.id %>"
+                      <%= typeof project !== 'undefined' &&
+                      String(quote._id || quote.id) === String(project.quote?._id || project.quote)
+                              ? 'selected' : '' %>>
                 <%= quote.project_name %>
               </option>
             <% }) %>
@@ -91,6 +93,38 @@
             <% }) %>
           </select>
         </div>
+
+        <% if (typeof project !== 'undefined' && typeof project.quote === 'object') { %>
+          <!-- Material Cost -->
+          <div class="mb-3">
+            <label class="form-label">Material cost:</label>
+            <input
+                    type="text"
+                    class="form-control"
+                    readonly
+                    value="<%= project.quote.calculated_price?.toFixed(2) %> HUF">
+          </div>
+
+          <!-- Profit margin -->
+          <div class="mb-3">
+            <label class="form-label">Profit margin (%):</label>
+            <input
+                    type="text"
+                    class="form-control"
+                    readonly
+                    value="<%= project.quote.profit %> %">
+          </div>
+
+          <!-- Final Price -->
+          <div class="mb-3">
+            <label class="form-label">Total quote price:</label>
+            <div class="form-control" style="background-color: #e9ecef;">
+              <%= project.quote.final_price?.toFixed(2) %> HUF
+              (<strong><%= (project.quote.final_price - project.quote.calculated_price).toFixed(2) %> HUF profit</strong>)
+            </div>
+          </div>
+        <% } %>
+
       </div>
     </div>
 

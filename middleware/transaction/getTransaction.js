@@ -1,3 +1,7 @@
+/*
+    Get a single transaction (res.locals.transaction)
+ */
+
 const requireOption = require('../common/requireOption');
 
 module.exports = function (objectRepository) {

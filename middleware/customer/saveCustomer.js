@@ -1,3 +1,8 @@
+/*
+    Save a new user or update an existing one.
+ */
+
+
 const requireOption = require('../common/requireOption');
 
 module.exports = function (objectRepository) {
@@ -16,6 +21,7 @@ module.exports = function (objectRepository) {
             return next(new Error('Missing customer data'));
         }
 
+        //check if customer was given
         const customer = res.locals.customer || new CustomerModel();
 
         customer.name = req.body.name;

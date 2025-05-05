@@ -1,3 +1,7 @@
+/*
+    Get the product list (res.locals.products)
+ */
+
 const requireOption = require('../common/requireOption');
 
 module.exports = function (objectRepository) {
