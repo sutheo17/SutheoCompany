@@ -1,5 +1,12 @@
 <%- include('header', {pagetitle: 'ProjectModify'}) -%>
-<div class="container mt-5">
+<% if (typeof project !== 'undefined' && project?._id) { %>
+  <form method="POST" action="/project/delete/<%= project._id %>" class="text-center mb-4"
+        onsubmit="return confirm('Are you sure you want to delete this project?');">
+    <input type="hidden" name="project_id" value="<%= project._id %>">
+    <button type="submit" class="btn btn-danger mt-3">Delete</button>
+  </form>
+<% } %>
+<div class="container mt-3">
   <% if (typeof error !== 'undefined') { %>
     <div class="alert alert-danger"><%= error %></div>
   <% } %>
@@ -52,8 +59,9 @@
               <option
                       value="<%= userItem.id %>"
                       <%= (
-                              (typeof project !== 'undefined' && project.team?.includes(userItem.id)) ||
-                              (typeof project === 'undefined' && user.id === userItem.id)
+                              typeof project !== 'undefined' &&
+                              Array.isArray(project.team) &&
+                              project.team.some(member => (member._id?.toString?.() || member.toString?.()) === userItem.id)
                       ) ? 'selected' : '' %>>
                 <%= userItem.name %>
               </option>
@@ -131,8 +139,22 @@
     <!-- Buttons -->
     <div class="d-flex justify-content-center gap-3">
       <button type="submit" class="btn btn-success btn-custom">Save</button>
-      <a href="/project" class="btn btn-danger btn-custom">Cancel</a>
+      <a href="/project" class="btn btn-secondary btn-custom">Cancel</a>
     </div>
   </form>
+    <% if (typeof product === 'undefined' && typeof project !== 'undefined' && project._id) { %>
+      <div class="d-flex justify-content-center mt-3">
+        <form method="POST" action="/project/print/<%= project._id %>">
+          <button type="submit" class="btn btn-primary btn-custom">Print</button>
+        </form>
+      </div>
+    <% } %>
+    <% if (typeof print !== 'undefined' && print) { %>
+      <div class="d-flex justify-content-center mt-3">
+        <div class="text-success fw-bold text-center">
+          ✔ Successfully printed
+        </div>
+      </div>
+    <% } %>
 </div>
 <%- include('footer') -%>

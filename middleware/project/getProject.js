@@ -11,6 +11,8 @@ module.exports = function (objectRepository) {
     return function (req, res, next) {
         ProjectModel.findOne({_id:req.params.projectid})
             .populate('quote')
+            .populate('customer')
+            .populate('team')
             .then((project) =>
             {
                 res.locals.project = project;

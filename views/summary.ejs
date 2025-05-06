@@ -1,0 +1,59 @@
+<h1 style="text-align: center;"><%= project.name %></h1>
+<p><strong>Customer:</strong> <%= project.customer.name %>
+    <% if (project.customer.phone) { %>
+        (<%= project.customer.phone %>)
+    <% } %>
+</p>
+
+<div style="margin-left: 40px;">
+    <p><strong>Address:</strong>
+        <%= project.customer.county %>,
+        <%= project.customer.zip %> <%= project.customer.city %>,
+        <%= project.customer.address %>
+    </p>
+
+    <p><strong>Email:</strong> <%= project.customer.email %></p>
+</div>
+<p><strong>Period:</strong> <%= project.dateFrom.toISOString().split('T')[0] %> – <%= project.dateTo.toISOString().split('T')[0] %></p>
+<p><strong>Team:</strong> <%= project.team.map(u => u.name).join(', ') %></p>
+
+<hr>
+
+<h2>Items</h2>
+<table border="1" cellspacing="0" cellpadding="5" width="100%">
+    <thead>
+    <tr>
+        <th>Item</th>
+        <th>Pieces</th>
+        <th>Unit price (HUF)</th>
+        <th>Sum (HUF)</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% items.forEach(item => { %>
+        <tr>
+            <td><%= item.product_name %></td>
+            <td><%= item.quantity %></td>
+            <td><%= item.unit_price.toFixed(2) %></td>
+            <td><%= item.total.toFixed(2) %></td>
+        </tr>
+    <% }) %>
+    </tbody>
+</table>
+
+<hr>
+
+<p><strong>Material cost:</strong> <%= project.quote.calculated_price.toFixed(2) %> HUF</p>
+<p><strong>Profit margin (%):</strong> <%= project.quote.profit %></p>
+<p><strong>Final cost:</strong> <%= project.quote.final_price.toFixed(2) %> HUF</p>
+<p><strong>Profit:</strong> <%= (project.quote.final_price - project.quote.calculated_price).toFixed(2) %> HUF</p>
+
+<div style="text-align: center; margin-top: 50px;">
+    <img src="http://localhost:3000/logo.png" alt="Logo" style="width: 150px;">
+    <div style="font-weight: bold; font-size: 16px; margin-top: 10px;">
+        Sütheö Bútor Kft.
+    </div>
+    <div style="font-size: 12px; color: #555; margin-top: 5px;">
+        Printed: <%= printedDate %>
+    </div>
+</div>

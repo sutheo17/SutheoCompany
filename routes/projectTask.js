@@ -9,6 +9,9 @@ const getProjectMW = require('../middleware/project/getProject');
 const saveQuoteMW = require('../middleware/project/saveQuote');
 const getListOfCustomerMW = require('../middleware/customer/getListOfCustomer');
 const saveProjectMW = require('../middleware/project/saveProject');
+const getSummaryMW = require('../middleware/project/getSummary');
+const printSummaryMW = require('../middleware/project/printSummary');
+const deleteProjectMW = require('../middleware/project/deleteProject');
 const ProductModel = require('../models/product');
 const QuoteModel = require('../models/quote');
 const UserModel = require('../models/user');
@@ -79,7 +82,17 @@ module.exports = function (app) {
         getListOfCustomerMW(objectRepository),
         getListOfUserMW(objectRepository),
         getProjectMW(objectRepository),
+        (req, res, next) => {
+            res.locals.print = req.query.printed === '1';
+            return next();
+        },
         renderMW(objectRepository, 'projectmodify')
+    );
+
+    // Delete a project
+    app.post('/project/delete/:projectid',
+        checkAuthMW(true),
+        deleteProjectMW(objectRepository)
     );
 
     // Save a new project or update an existing one
@@ -87,5 +100,14 @@ module.exports = function (app) {
         checkAuthMW(true),
         saveProjectMW(objectRepository),
         renderMW(objectRepository, 'projectmodify')
+    );
+
+    // Print a project
+    app.post('/project/print/:projectid',
+        checkAuthMW(true),
+        getListOfProductMW(objectRepository),
+        getProjectMW(objectRepository),
+        getSummaryMW(objectRepository),
+        printSummaryMW(objectRepository),
     );
 };
