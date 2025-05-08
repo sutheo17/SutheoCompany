@@ -6,6 +6,7 @@
     <button type="submit" class="btn btn-danger mt-3">Delete</button>
   </form>
 <% } %>
+
 <div class="container mt-3">
   <% if (typeof error !== 'undefined') { %>
     <div class="alert alert-danger"><%= error %></div>
@@ -76,11 +77,11 @@
         <div class="mb-3">
           <label for="quoteSelect" class="form-label">Quote:</label>
           <select class="form-select" id="quoteSelect" name="quote" required>
+            <option disabled selected hidden value="">-- Select quote --</option>
             <% quotes.forEach(quote => { %>
               <option
                       value="<%= quote._id || quote.id %>"
-                      <%= typeof project !== 'undefined' &&
-                      String(quote._id || quote.id) === String(project.quote?._id || project.quote)
+                      <%= project?.quote && String(quote._id || quote.id) === String(project.quote?._id || project.quote)
                               ? 'selected' : '' %>>
                 <%= quote.project_name %>
               </option>
@@ -92,10 +93,12 @@
         <div class="mb-3">
           <label for="customerSelect" class="form-label">Customer:</label>
           <select class="form-select w-auto" id="customerSelect" name="customer" required>
+            <option disabled selected hidden value="">-- Select customer --</option>
             <% customers.forEach(customer => { %>
               <option
-                      value="<%= customer.id %>"
-                      <%= typeof project !== 'undefined' && customer.id === project.customer?.toString() ? 'selected' : '' %>>
+                      value="<%= customer._id %>"
+                      <%= project?.customer && project.customer._id?.toString?.() === customer._id.toString()
+                              ? 'selected' : '' %>>
                 <%= customer.name %>
               </option>
             <% }) %>

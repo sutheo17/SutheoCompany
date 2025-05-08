@@ -1,11 +1,11 @@
 <%- include('header', {pagetitle: 'Project'}) -%>
-<div id="calendar"></div>
-
 <% if (user.leader === true) { %>
-  <div class="add-button-project pb-5">
+  <div class="add-button-project">
     <button class="btn btn-success" onclick="window.location.href='/project/add'">Add new</button>
   </div>
 <% } %>
+
+<div id="calendar"></div>
 
 <!-- load in the calendar -->
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>

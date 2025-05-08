@@ -12,6 +12,9 @@ const saveProjectMW = require('../middleware/project/saveProject');
 const getSummaryMW = require('../middleware/project/getSummary');
 const printSummaryMW = require('../middleware/project/printSummary');
 const deleteProjectMW = require('../middleware/project/deleteProject');
+const deleteQuoteMW = require('../middleware/project/deleteQuote');
+const getListOfProjectsPopulated = require("../middleware/project/getListOfProjectsPopulated");
+const isQuoteUsedMW = require("../middleware/project/isQuoteUsed");
 const ProductModel = require('../models/product');
 const QuoteModel = require('../models/quote');
 const UserModel = require('../models/user');
@@ -32,6 +35,11 @@ module.exports = function (app) {
         checkAuthMW(true),
         getListOfProductMW(objectRepository),
         getListOfQuotesMW(objectRepository),
+        (req, res, next) => {
+            res.locals.used = req.query.used === '1';
+            res.locals.projectNames = req.query.projects ? decodeURIComponent(req.query.projects) : null;
+            return next();
+        },
         renderMW(objectRepository, 'quote')
     );
 
@@ -39,6 +47,14 @@ module.exports = function (app) {
     app.post('/quote/save/:quoteid?',
         checkAuthMW(true),
         saveQuoteMW(objectRepository)
+    );
+
+    // Delete a project
+    app.post('/quote/delete/:quoteid',
+        checkAuthMW(true),
+        getListOfProjectsPopulated(objectRepository),
+        isQuoteUsedMW(objectRepository),
+        deleteQuoteMW(objectRepository)
     );
 
     // Load a quote from the database

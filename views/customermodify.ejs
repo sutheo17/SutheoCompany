@@ -1,11 +1,17 @@
 <%- include('header', {pagetitle: 'CustomerModify'}) -%>
-<div class="container d-flex justify-content-center align-items-center mt-5">
+<div class="container d-flex justify-content-center align-items-center mt-3">
   <div class="w-100" style="max-width: 400px;">
     <% if (customer?._id) { %>
       <form method="POST" action="/customer/delete/<%= customer._id %>" class="text-center mt-3" onsubmit="return confirm('Are you sure you want to delete this customer?');">
         <input type="hidden" name="customer_id" value="<%= customer._id %>">
         <button type="submit" class="btn btn-danger">Delete</button>
       </form>
+      <% if (used && projectNames) { %>
+        <div class="alert alert-danger mt-3">
+          <strong>Delete is not allowed.</strong><br>
+          User is assigned to the following projects: <%= projectNames %>
+        </div>
+      <% } %>
     <% } %>
     <form method="POST" action="/customer/save/<%= customer?._id || '' %>">
 
@@ -57,7 +63,7 @@
 
       <!-- SAVE / CANCEL -->
       <div class="d-flex justify-content-between align-items-center mt-4">
-        <div class="d-flex gap-3">
+        <div class="d-flex gap-3 mb-3">
           <button type="submit" class="btn btn-success">Save</button>
           <a href="/customer" class="btn btn-secondary">Cancel</a>
         </div>

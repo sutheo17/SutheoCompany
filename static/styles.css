@@ -31,6 +31,7 @@
 #calendar {
     max-width: 900px;
     margin: 50px auto;
+    margin-top: 1em;
 }
 .add-button-project {
     display: flex;
