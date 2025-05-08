@@ -7,14 +7,10 @@ module.exports = function (objectRepository) {
 
     return function (req, res, next) {
 
-        console.log('Notify beee');
         //check if the product became out of stock
         if (!res.locals.notifyOutOfStock) {
-            console.log('Notify xdxd');
             return res.redirect(`/`)
         }
-
-        console.log('Notify OutOfStock');
 
         ProductModel.findOne({ _id: req.params.productid })
             .then((product) => {

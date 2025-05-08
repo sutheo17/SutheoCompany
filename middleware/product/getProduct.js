@@ -12,7 +12,6 @@ module.exports = function (objectRepository) {
         ProductModel.findOne({_id:req.params.productid}).then((product) =>
         {
             res.locals.product = product;
-            console.log(product);
             return next();
         }).catch((err) => {return next(err)});
     };
