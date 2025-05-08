@@ -96,9 +96,13 @@ module.exports = function (objectRepository) {
                 .then(() => {
                     //remove sizes which are not in stock anymore
                     product.sizes = product.sizes.filter(size => size.quantity > 0);
+                    const isOutOfStock = product.sizes.length === 0;
+                    if (isOutOfStock) {
+                        res.locals.notifyOutOfStock = true;
+                    }
                     return product.save();
                 })
-                .then(() => res.redirect(`/`))
+                .then(() => next())
                 .catch(err => next(err));
         }
         else
@@ -117,8 +121,14 @@ module.exports = function (objectRepository) {
             product.in_stock -= diff;
 
             return transaction.save()
-                .then(() => product.save())
-                .then(() => res.redirect(`/`))
+                .then(() => {
+                    const isOutOfStock = product.in_stock === 0;
+                    if (isOutOfStock) {
+                        res.locals.notifyOutOfStock = true;
+                    }
+                    return product.save();
+                })
+                .then(() => next())
                 .catch(err => next(err));
         }
     };

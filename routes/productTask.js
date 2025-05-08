@@ -6,6 +6,7 @@ const getProductMW = require('../middleware/product/getProduct');
 const deleteProductMW = require('../middleware/product/deleteProduct');
 
 const ProductModel = require('../models/product');
+const TransactionModel = require('../models/transaction');
 
 const multer = require('multer');
 const path = require('path');
@@ -33,7 +34,8 @@ const upload = multer({
 
 module.exports = function (app) {
     const objectRepository = {
-        ProductModel: ProductModel
+        ProductModel: ProductModel,
+        TransactionModel: TransactionModel
     };
 
     // Pricing

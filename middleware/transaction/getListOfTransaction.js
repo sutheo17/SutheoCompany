@@ -16,10 +16,8 @@ module.exports = function (objectRepository) {
             .populate('_product')
             .populate('_user')
             .then((transactions) => {
-                console.log("TRANSACTIONS")
-                console.log(transactions);
-            res.locals.transactions = transactions;
-            return next();
+                res.locals.transactions = transactions;
+                return next();
         }).catch((err) => {return next(err)});
     };
 

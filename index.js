@@ -7,8 +7,10 @@ app.set('view engine', 'ejs');
 
 app.use(express.urlencoded({ extended: true }));
 
+require('dotenv').config();
+
 app.use(session({
-    secret: '1nD*Fs9v@L0X#fA!',
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false
 }));
@@ -33,6 +35,6 @@ app.use((err, req,res,next) =>{
     console.log(err);
 });
 
-const server = app.listen(3000, function () {
+const server = app.listen(process.env.PORT, function () {
     console.log("Listening on: 3000")
 });

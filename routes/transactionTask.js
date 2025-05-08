@@ -9,6 +9,7 @@ const ProductModel = require("../models/product");
 const TransactionModel = require("../models/transaction");
 const UserModel = require("../models/user");
 const getProductMW = require("../middleware/product/getProduct");
+const notifyOutOfStockMW = require("../middleware/product/notifyOutOfStock.js");
 
 module.exports = function (app) {
     const objectRepository = {
@@ -23,7 +24,8 @@ module.exports = function (app) {
         getProductMW(objectRepository),
         getTransactionMW(objectRepository),
         getUserMW(objectRepository),
-        saveTransactionMW(objectRepository)
+        saveTransactionMW(objectRepository),
+        notifyOutOfStockMW(objectRepository)
     );
 
     // Transactions for a certain product
